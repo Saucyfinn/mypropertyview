@@ -1,17 +1,13 @@
-//
-//  PropertyViewApp.swift
-//  PropertyView
-//
-//  Created by Brendon Hogg on 28/08/2025.
-//
-
 import SwiftUI
 
 @main
-struct PropertyViewApp: App {
+struct PropertyviewApp: App {
+    @StateObject var state = AppState()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabs()                 // ✅ your TabView, not ContentView()
+                .environmentObject(state)
         }
     }
 }
+
