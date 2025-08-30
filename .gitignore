@@ -88,3 +88,10 @@ fastlane/test_output
 # Archives
 *.xcarchive
 >>>>>>> c5037be (Initial commit)
+.DS_Store
+*.xcuserstate
+*.xcuserdata/
+DerivedData/
+build/
+*.zip
+PropertyView.zip
