@@ -1,5 +1,5 @@
 // --- Config -----------------------------------------------------------------
-const LINZ_KEY = "";                  // leave empty in-app; set only for Safari testing
+const LINZ_KEY = window.LINZ_API_KEY || "";     // API key from environment
 const SEARCH_RADIUS_M = 80;
 const FIT_PADDING_PX = 24;            // padding around subject bounds
 const FIT_MAX_ZOOM = 18;              // cap zoom when fitting
