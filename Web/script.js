@@ -33,17 +33,43 @@ const baseLayers = {
 L.control.layers(baseLayers, {}, { position: "topright" }).addTo(map);
 L.control.scale({ metric: true, imperial: false }).addTo(map);
 
-// Boundaries (no fill)
-const parcels = L.geoJSON(null, { style: { color: "#ff3b30", weight: 2, fill: false } }).addTo(map);
+// Property boundaries layers
+const subjectProperty = L.geoJSON(null, { 
+  style: { color: "#007AFF", weight: 3, fill: false, dashArray: "" } 
+}).addTo(map);
+
+const neighborProperties = L.geoJSON(null, { 
+  style: { color: "#ff3b30", weight: 2, fill: false, dashArray: "5, 5" } 
+});
+
+// Track layer state
+let showNeighbors = true;
+let currentSatelliteLayer = null;
 
 // --- Custom control (topright, under Layers) --------------------------------
-let statusEl, zoneEl, exportBtn, zoneBtn;
+let statusEl, zoneEl, exportBtn, zoneBtn, neighborsBtn, satelliteBtn;
 
 const AppPanel = L.Control.extend({
   onAdd: function () {
     const div = L.DomUtil.create('div', 'leaflet-control pv-panel');
 
-    // Buttons row (Get Zoning + Export KML)
+    // View toggles
+    const toggleGroup = L.DomUtil.create('div', 'toggle-group', div);
+    const toggleLabel = L.DomUtil.create('label', '', toggleGroup);
+    toggleLabel.textContent = 'View Options:';
+    
+    const satelliteBtn = L.DomUtil.create('button', '', toggleGroup);
+    satelliteBtn.id = 'satellite-toggle';
+    satelliteBtn.textContent = 'Satellite';
+    
+    const neighborsBtn = L.DomUtil.create('button', 'active', toggleGroup);
+    neighborsBtn.id = 'neighbors-toggle';
+    neighborsBtn.textContent = 'Neighbors';
+
+    // Divider
+    L.DomUtil.create('div', 'section-divider', div);
+
+    // Action buttons
     const btnZ = L.DomUtil.create('button', '', div);
     btnZ.id = 'pv-zone-btn';
     btnZ.textContent = 'Get Zoning';
@@ -65,18 +91,22 @@ const AppPanel = L.Control.extend({
     zone.innerHTML = 'Zoning: <strong>—</strong>';
 
     L.DomEvent.disableClickPropagation(div);
-    this._zoneBtn   = btnZ;
+    this._zoneBtn = btnZ;
     this._exportBtn = btnX;
-    this._statusEl  = status;
-    this._zoneEl    = zone;
+    this._statusEl = status;
+    this._zoneEl = zone;
+    this._neighborsBtn = neighborsBtn;
+    this._satelliteBtn = satelliteBtn;
     return div;
   }
 });
 const panel = new AppPanel({ position: 'topright' }).addTo(map);
-zoneBtn   = panel._zoneBtn;
+zoneBtn = panel._zoneBtn;
 exportBtn = panel._exportBtn;
-statusEl  = panel._statusEl;
-zoneEl    = panel._zoneEl;
+statusEl = panel._statusEl;
+zoneEl = panel._zoneEl;
+neighborsBtn = panel._neighborsBtn;
+satelliteBtn = panel._satelliteBtn;
 
 // --- Subject feature + marker ----------------------------------------------
 let subjectPin = null;
@@ -89,8 +119,44 @@ function updateSubjectPin(latlng) {
   if (subjectPin) subjectPin.setLatLng(latlng);
   else subjectPin = L.marker(latlng).addTo(map);
 }
-function setTopText(html)  { if (statusEl) statusEl.innerHTML = html; }
-function setZoneText(html) { if (zoneEl)   zoneEl.innerHTML   = html; }
+function setTopText(html) { if (statusEl) statusEl.innerHTML = html; }
+function setZoneText(html) { if (zoneEl) zoneEl.innerHTML = html; }
+
+// Toggle functions
+function toggleSatellite() {
+  if (currentSatelliteLayer) {
+    map.removeLayer(currentSatelliteLayer);
+    currentSatelliteLayer = null;
+    satelliteBtn.classList.remove('active');
+  } else {
+    currentSatelliteLayer = baseLayers["Esri Satellite"];
+    map.addLayer(currentSatelliteLayer);
+    satelliteBtn.classList.add('active');
+  }
+}
+
+function toggleNeighbors() {
+  showNeighbors = !showNeighbors;
+  if (showNeighbors) {
+    if (neighborProperties.getLayers().length > 0) {
+      map.addLayer(neighborProperties);
+    }
+    neighborsBtn.classList.add('active');
+  } else {
+    if (map.hasLayer(neighborProperties)) {
+      map.removeLayer(neighborProperties);
+    }
+    neighborsBtn.classList.remove('active');
+  }
+}
+
+function openARView() {
+  if (subjectProperty.getLayers().length > 0) {
+    alert('AR View would open here!\\n\\nThis would launch the camera view with property boundaries overlaid in augmented reality.');
+  } else {
+    alert('Please select a property first by clicking on the map.');
+  }
+}
 function getAppellation(props) {
   return (props && (props.appellation ?? props.Appellation ?? props.APP ?? props.name)) || null;
 }
@@ -171,8 +237,58 @@ async function fetchZoningForSubject(centerLatLng) {
 
 // --- Render returned parcels & choose subject --------------------------------
 function renderAndCenter(gj) {
-  parcels.clearLayers().addData(gj);
-  const layers = parcels.getLayers();
+  // Clear existing layers
+  subjectProperty.clearLayers();
+  neighborProperties.clearLayers();
+  
+  if (!gj?.features?.length) {
+    subjectFeature = null;
+    subjectCenterLatLng = null;
+    setTopText("Property: <strong>—</strong>");
+    setZoneText("Zoning: <strong>—</strong>");
+    exportBtn.disabled = true;
+    zoneBtn.disabled = true;
+    return;
+  }
+
+  // Find the subject property (closest to click point)
+  let subjectFeatureData = gj.features[0];
+  if (currentQueryLatLng && gj.features.length > 1) {
+    let bestDistance = Infinity;
+    gj.features.forEach(feature => {
+      if (feature.geometry) {
+        try {
+          const center = turf.centroid(feature).geometry.coordinates;
+          const distance = map.distance([center[1], center[0]], currentQueryLatLng);
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            subjectFeatureData = feature;
+          }
+        } catch (e) { /* ignore */ }
+      }
+    });
+  }
+
+  // Add subject property
+  subjectProperty.addData(subjectFeatureData);
+  
+  // Add neighbors if any exist
+  const neighbors = gj.features.filter(f => f !== subjectFeatureData);
+  if (neighbors.length > 0) {
+    neighborProperties.addData({
+      type: "FeatureCollection",
+      features: neighbors
+    });
+    
+    // Add to map if neighbors are enabled
+    if (showNeighbors && !map.hasLayer(neighborProperties)) {
+      map.addLayer(neighborProperties);
+    }
+  }
+
+  // Update global reference
+  subjectFeature = subjectFeatureData;
+  const layers = subjectProperty.getLayers();
   if (!layers.length) {
     subjectFeature = null;
     subjectCenterLatLng = null;
@@ -199,7 +315,7 @@ function renderAndCenter(gj) {
   subjectCenterLatLng = center;
 
   const app = getAppellation(subjectFeature?.properties);
-  setTopText(app ? `Appellation: <strong>${app}</strong>` : "Appellation: <strong>Unknown</strong>");
+  setTopText(app ? `Property: <strong>${app}</strong>` : "Property: <strong>Found</strong>");
 
   updateSubjectPin(center);
   map.fitBounds(subjectBounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], maxZoom: FIT_MAX_ZOOM });
@@ -317,6 +433,9 @@ function exportKML() {
 // Wire up the buttons
 zoneBtn.addEventListener("click", () => fetchZoningForSubject(subjectCenterLatLng));
 exportBtn.addEventListener("click", exportKML);
+satelliteBtn.addEventListener("click", toggleSatellite);
+neighborsBtn.addEventListener("click", toggleNeighbors);
+document.getElementById('ar-btn').addEventListener("click", openARView);
 
 // --- Interactions -----------------------------------------------------------
 map.on("click", (e) => requestParcels(e.latlng.lng, e.latlng.lat, SEARCH_RADIUS_M));

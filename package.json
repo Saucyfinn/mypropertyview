@@ -1,0 +1,27 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.json,.jsonc,.md --no-error-on-unmatched-pattern",
+    "lint:md": "markdownlint-cli2 \"**/*.md\"",
+    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
+    "lint:all": "npm run lint && npm run lint:md && npm run lint:css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsonc": "^2.20.1",
+    "eslint-plugin-markdown": "^5.1.0",
+    "jsonc-eslint-parser": "^2.4.0",
+    "markdownlint-cli2": "^0.18.1",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^39.0.0"
+  }
+}
