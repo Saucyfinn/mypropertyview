@@ -1,0 +1,3 @@
+id,label,address,appellation,lat,lon,alt_m,notes
+1,Subject Site,123 Example St,Lot 1 DP 12345,-36.852095,174.76318,0,Replace with your actual site details
+2,Neighbour 1,45 Test Ave,Lot 2 DP 67890,-36.853,174.764,0,Optional extra point
