@@ -1,6 +1,12 @@
 // --- Config -----------------------------------------------------------------
 const LINZ_KEY = window.LINZ_API_KEY || "";     // API key from environment
 const SEARCH_RADIUS_M = 80;
+
+// Initialize coordinate processor
+let coordinateProcessor = null;
+if (LINZ_KEY) {
+    coordinateProcessor = new CoordinateProcessor(LINZ_KEY);
+}
 const FIT_PADDING_PX = 24;            // padding around subject bounds
 const FIT_MAX_ZOOM = 18;              // cap zoom when fitting
 
@@ -151,8 +157,19 @@ function toggleNeighbors() {
 }
 
 function openARView() {
-  if (subjectProperty.getLayers().length > 0) {
-    alert('AR View would open here!\\n\\nThis would launch the camera view with property boundaries overlaid in augmented reality.');
+  if (coordinateProcessor && coordinateProcessor.getSubjectProperty()) {
+    const arCoords = coordinateProcessor.getARCoordinates();
+    if (arCoords) {
+      console.log('AR Coordinates Ready:', arCoords);
+      alert(`AR Ready!\\n\\nSubject Property: ${arCoords.subjectProperty.appellation}\\n` + 
+            `AR Points: ${arCoords.subjectProperty.arPoints.length}\\n` +
+            `Neighbor Properties: ${arCoords.neighborProperties.length}\\n\\n` +
+            `Coordinates saved to files and ready for AR visualization!`);
+    } else {
+      alert('Converting coordinates for AR...\\nPlease wait and try again.');
+    }
+  } else if (subjectProperty && subjectProperty.getLayers().length > 0) {
+    alert('Property found but AR coordinates not ready.\\nClick on the map to reload property data with AR support.');
   } else {
     alert('Please select a property first by clicking on the map.');
   }
@@ -341,7 +358,7 @@ window.renderParcelsFromBase64 = function (b64) {
 // --- Request parcels (JS -> Swift, with browser fallback) -------------------
 async function requestParcels(lon, lat, r = SEARCH_RADIUS_M) {
   currentQueryLatLng = L.latLng(lat, lon);
-  setTopText("Appellation: <strong>finding…</strong>");
+  setTopText("Property: <strong>finding…</strong>");
   setZoneText("Zoning: <strong>—</strong>");
 
   if (window.webkit?.messageHandlers?.getParcels) {
@@ -349,32 +366,28 @@ async function requestParcels(lon, lat, r = SEARCH_RADIUS_M) {
     return;
   }
 
-  if (LINZ_KEY) {
+  // Use coordinate processor for LINZ data with AR support
+  if (coordinateProcessor) {
     try {
-      const { minLon, minLat, maxLon, maxLat } = bboxAround(lon, lat, r);
-      const url = new URL(`https://data.linz.govt.nz/services;key=${LINZ_KEY}/wfs`);
-      url.search = new URLSearchParams({
-        service: "WFS",
-        version: "2.0.0",
-        request: "GetFeature",
-        typeNames: "layer-50823",
-        outputFormat: "application/json",
-        srsName: "EPSG:4326",
-        bbox: `${minLon},${minLat},${maxLon},${maxLat},EPSG:4326`,
-        count: "100"
-      }).toString();
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const gj = await res.json();
+      setTopText("Property: <strong>downloading from LINZ…</strong>");
+      const gj = await coordinateProcessor.downloadPropertyBoundaries(lon, lat, r);
+      
+      // Convert to AR coordinates using current location as origin
+      if (gj.features && gj.features.length > 0) {
+        setTopText("Property: <strong>converting for AR…</strong>");
+        const arCoords = coordinateProcessor.convertToARCoordinates(lat, lon, 0);
+        console.log('AR coordinates prepared:', arCoords.subjectProperty.arPoints.length, 'points for subject property');
+      }
+      
       renderAndCenter(gj);
     } catch (e) {
-      console.error(e);
-      setTopText("Appellation: <strong>fetch failed</strong>");
+      console.error('LINZ fetch error:', e);
+      setTopText("Property: <strong>fetch failed</strong>");
     }
     return;
   }
 
-  setTopText("Appellation: <strong>—</strong>");
+  setTopText("Property: <strong>API key required</strong>");
 }
 
 // --- KML export (subject feature only) --------------------------------------
