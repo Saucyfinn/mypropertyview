@@ -257,7 +257,6 @@ function renderAndCenter(gj) {
     setTopText("Property: <strong>—</strong>");
     setZoneText("Zoning: <strong>—</strong>");
     exportBtn.disabled = true;
-    zoneBtn.disabled = true;
     return;
   }
 
@@ -305,7 +304,6 @@ function renderAndCenter(gj) {
     setTopText("Appellation: <strong>—</strong>");
     setZoneText("Zoning: <strong>—</strong>");
     exportBtn.disabled = true;
-    zoneBtn.disabled = true;
     return;
   }
 
@@ -331,7 +329,6 @@ function renderAndCenter(gj) {
   map.fitBounds(subjectBounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], maxZoom: FIT_MAX_ZOOM });
 
   exportBtn.disabled = false;
-  zoneBtn.disabled = false;
 
   // Auto-fetch zoning once when subject selected (button can re-run)
   fetchZoningForSubject(center);
@@ -437,7 +434,6 @@ function exportKML() {
 }
 
 // Wire up the buttons
-zoneBtn.addEventListener("click", () => fetchZoningForSubject(subjectCenterLatLng));
 exportBtn.addEventListener("click", exportKML);
 satelliteBtn.addEventListener("click", toggleSatellite);
 neighborsBtn.addEventListener("click", toggleNeighbors);
