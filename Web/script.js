@@ -391,14 +391,27 @@ function featureToKmlPlacemark(feature) {
   } else if (feature.geometry?.type === "MultiPolygon") {
     body = feature.geometry.coordinates.map(polygonToKml).join("");
   } else { return ""; }
-  return `<Placemark><name>${app}</name>${body}</Placemark>`;
+  return `<Placemark><name>${app}</name><styleUrl>#boundaryStyle</styleUrl>${body}</Placemark>`;
 }
 function buildSubjectKml() {
   if (!subjectFeature) return null;
   const pm = featureToKmlPlacemark(subjectFeature);
   if (!pm) return null;
+  
+  // KML style for boundary-only display (no fill)
+  const style = `<Style id="boundaryStyle">
+    <LineStyle>
+      <color>ff0000ff</color>
+      <width>2</width>
+    </LineStyle>
+    <PolyStyle>
+      <fill>0</fill>
+      <outline>1</outline>
+    </PolyStyle>
+  </Style>`;
+  
   return `<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2"><Document>${pm}</Document></kml>`;
+<kml xmlns="http://www.opengis.net/kml/2.2"><Document>${style}${pm}</Document></kml>`;
 }
 function exportKML() {
   const kml = buildSubjectKml();
