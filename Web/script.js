@@ -53,7 +53,7 @@ let showNeighbors = true;
 let currentSatelliteLayer = null;
 
 // --- Custom control (topright, under Layers) --------------------------------
-let statusEl, zoneEl, exportBtn, zoneBtn, neighborsBtn, satelliteBtn;
+let statusEl, zoneEl, exportBtn, neighborsBtn, satelliteBtn;
 
 const AppPanel = L.Control.extend({
   onAdd: function () {
@@ -76,11 +76,6 @@ const AppPanel = L.Control.extend({
     L.DomUtil.create('div', 'section-divider', div);
 
     // Action buttons
-    const btnZ = L.DomUtil.create('button', '', div);
-    btnZ.id = 'pv-zone-btn';
-    btnZ.textContent = 'Get Zoning';
-    btnZ.disabled = true;
-
     const btnX = L.DomUtil.create('button', '', div);
     btnX.id = 'pv-export';
     btnX.textContent = 'Export KML';
@@ -97,7 +92,6 @@ const AppPanel = L.Control.extend({
     zone.innerHTML = 'Zoning: <strong>—</strong>';
 
     L.DomEvent.disableClickPropagation(div);
-    this._zoneBtn = btnZ;
     this._exportBtn = btnX;
     this._statusEl = status;
     this._zoneEl = zone;
@@ -107,7 +101,6 @@ const AppPanel = L.Control.extend({
   }
 });
 const panel = new AppPanel({ position: 'topright' }).addTo(map);
-zoneBtn = panel._zoneBtn;
 exportBtn = panel._exportBtn;
 statusEl = panel._statusEl;
 zoneEl = panel._zoneEl;
