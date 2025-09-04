@@ -53,59 +53,49 @@ let showNeighbors = true;
 let currentSatelliteLayer = null;
 
 // --- Custom control (topright, under Layers) --------------------------------
-let statusEl, zoneEl, exportBtn, neighborsBtn, satelliteBtn;
+let statusEl, exportBtn, neighborsBtn, satelliteBtn;
 
-const AppPanel = L.Control.extend({
-  onAdd: function () {
-    const div = L.DomUtil.create('div', 'leaflet-control pv-panel');
+// Create floating buttons and status display
+function createFloatingControls() {
+  // Property status display
+  const statusDiv = document.createElement('div');
+  statusDiv.className = 'property-status';
+  statusDiv.id = 'pv-status';
+  statusDiv.innerHTML = 'Property: <strong>—</strong>';
+  document.body.appendChild(statusDiv);
+  statusEl = statusDiv;
 
-    // View toggles
-    const toggleGroup = L.DomUtil.create('div', 'toggle-group', div);
-    const toggleLabel = L.DomUtil.create('label', '', toggleGroup);
-    toggleLabel.textContent = 'View Options:';
-    
-    const satelliteBtn = L.DomUtil.create('button', '', toggleGroup);
-    satelliteBtn.id = 'satellite-toggle';
-    satelliteBtn.textContent = 'Satellite';
-    
-    const neighborsBtn = L.DomUtil.create('button', 'active', toggleGroup);
-    neighborsBtn.id = 'neighbors-toggle';
-    neighborsBtn.textContent = 'Neighbors';
+  // Satellite toggle button
+  const satelliteButton = document.createElement('button');
+  satelliteButton.className = 'floating-btn';
+  satelliteButton.id = 'satellite-toggle';
+  satelliteButton.textContent = 'Satellite';
+  satelliteButton.style.top = '80px';
+  document.body.appendChild(satelliteButton);
+  satelliteBtn = satelliteButton;
 
-    // Divider
-    L.DomUtil.create('div', 'section-divider', div);
+  // Neighbors toggle button
+  const neighborsButton = document.createElement('button');
+  neighborsButton.className = 'floating-btn active';
+  neighborsButton.id = 'neighbors-toggle';
+  neighborsButton.textContent = 'Neighbors';
+  neighborsButton.style.top = '130px';
+  document.body.appendChild(neighborsButton);
+  neighborsBtn = neighborsButton;
 
-    // Action buttons
-    const btnX = L.DomUtil.create('button', '', div);
-    btnX.id = 'pv-export';
-    btnX.textContent = 'Export KML';
-    btnX.disabled = true;
+  // Export KML button
+  const exportButton = document.createElement('button');
+  exportButton.className = 'floating-btn';
+  exportButton.id = 'pv-export';
+  exportButton.textContent = 'Export KML';
+  exportButton.disabled = true;
+  exportButton.style.top = '180px';
+  document.body.appendChild(exportButton);
+  exportBtn = exportButton;
+}
 
-    // Appellation readout
-    const status = L.DomUtil.create('div', 'pv-status', div);
-    status.id = 'pv-status';
-    status.innerHTML = 'Appellation: <strong>—</strong>';
-
-    // Zoning readout
-    const zone = L.DomUtil.create('div', 'pv-status', div);
-    zone.id = 'pv-zone';
-    zone.innerHTML = 'Zoning: <strong>—</strong>';
-
-    L.DomEvent.disableClickPropagation(div);
-    this._exportBtn = btnX;
-    this._statusEl = status;
-    this._zoneEl = zone;
-    this._neighborsBtn = neighborsBtn;
-    this._satelliteBtn = satelliteBtn;
-    return div;
-  }
-});
-const panel = new AppPanel({ position: 'topright' }).addTo(map);
-exportBtn = panel._exportBtn;
-statusEl = panel._statusEl;
-zoneEl = panel._zoneEl;
-neighborsBtn = panel._neighborsBtn;
-satelliteBtn = panel._satelliteBtn;
+// Initialize floating controls when map loads
+createFloatingControls();
 
 // --- Subject feature + marker ----------------------------------------------
 let subjectPin = null;
@@ -119,7 +109,6 @@ function updateSubjectPin(latlng) {
   else subjectPin = L.marker(latlng).addTo(map);
 }
 function setTopText(html) { if (statusEl) statusEl.innerHTML = html; }
-function setZoneText(html) { if (zoneEl) zoneEl.innerHTML = html; }
 
 // Toggle functions
 function toggleSatellite() {
@@ -255,7 +244,7 @@ function renderAndCenter(gj) {
     subjectFeature = null;
     subjectCenterLatLng = null;
     setTopText("Property: <strong>—</strong>");
-    setZoneText("Zoning: <strong>—</strong>");
+
     exportBtn.disabled = true;
     return;
   }
@@ -302,7 +291,7 @@ function renderAndCenter(gj) {
     subjectFeature = null;
     subjectCenterLatLng = null;
     setTopText("Appellation: <strong>—</strong>");
-    setZoneText("Zoning: <strong>—</strong>");
+
     exportBtn.disabled = true;
     return;
   }
@@ -349,7 +338,6 @@ window.renderParcelsFromBase64 = function (b64) {
 async function requestParcels(lon, lat, r = SEARCH_RADIUS_M) {
   currentQueryLatLng = L.latLng(lat, lon);
   setTopText("Property: <strong>finding…</strong>");
-  setZoneText("Zoning: <strong>—</strong>");
 
   if (window.webkit?.messageHandlers?.getParcels) {
     window.webkit.messageHandlers.getParcels.postMessage({ lon, lat, radius: r });
