@@ -1,0 +1,61 @@
+Yep — you can still get rock-solid placement on iOS with ARKit even when GeoAnchors / GeoTracking aren’t available. Below are ARKit-only workarounds I’ve used that don’t require Unity, Immersal, or any third-party VPS. They combine CoreLocation, ARKit world tracking, LiDAR (if you’ve got it), and a little math.
+
+1) ENU bootstrap: align ARKit to your parcel coords (no VPS)
+
+Goal: place your LINZ parcel accurately by converting its WGS84 coords to a local East-North-Up (ENU) frame, then aligning that to ARKit’s world space.
+
+How
+	1.	Pick an origin (parcel centroid).
+	2.	Convert every parcel vertex (lat/lon/alt) → ENU meters about that origin.
+	3.	Start ARKit with world-tracking and gravity+heading alignment so your AR x/z axes match true heading out of the gate.
+	4.	Translate the ENU parcel so its origin sits at the device’s initial AR camera position, then refine (see #2).
+
+Key API notes: use ARWorldTrackingConfiguration with .worldAlignment = .gravityAndHeading to lock yaw to the compass, and avoid GeoTracking entirely. Apple docs: world alignment and geotracking limitations for context.  ￼
+
+2) Control-point refine (survey-style, no markers)
+
+Goal: fix the last meters by solving a rigid transform from a few “known corners”.
+
+How
+	•	Let the user tap 2–4 visible control points (e.g., fence corners, survey pegs) on the ground in AR.
+	•	For each tap, raycast to get AR points Pᵢ (AR).
+	•	Pair them with the corresponding Pᵢ (ENU) from your parcel.
+	•	Solve the best-fit rotation + translation (Kabsch/Umeyama). Apply to the whole parcel mesh/lines.
+	•	Show residuals so the user can re-tap any bad pick.
+
+This gives you sub-meter alignment if the taps are clean and well-spaced.
+
+3) LiDAR assist + constrained ICP (Pro devices)
+
+Goal: make alignment nearly automatic outdoors.
+	•	Enable Scene Reconstruction mesh; fit the dominant ground plane.
+	•	Project your parcel polyline to z≈0 in ENU (ground) and run a 2D ICP against the ground-mesh edges / feature points (curbs, fences).
+	•	Constrain scale = 1 (ARKit scale is metric) and yaw near compass.
+This quickly snaps parcels onto the terrain when you have fences/edges.
+
+4) Fiducial “survey tag” anchors (temporary, cheap)
+
+If you can place a couple of laminated tags where pegs are (e.g., QR/AprilTag):
+	•	Detect with Vision; add ARImageAnchors at those spots.
+	•	Each tag has a known WGS84 → ENU position; with 2+ tags you directly compute the transform and you’re done.
+Totally offline, very stable over sessions.
+
+5) Persist & relocalize with ARWorldMap (no VPS)
+
+Once you’ve got a good alignment, save the map so you can return and relocalize instantly:
+	•	Get ARWorldMap from the session; write to disk (or CloudKit).
+	•	On the next visit, load it into ARWorldTrackingConfiguration.initialWorldMap.
+This is Apple-blessed persistence and works great at job sites you revisit.  ￼ ￼
+
+6) Light drift-correction loop (GPS + heading)
+
+Run a soft correction at low rate:
+	•	Every few seconds, compare your current AR camera→origin translation to the expected coarse GPS delta (from CoreLocation).
+	•	Nudge the AR content (not the session) toward the GPS-implied offset by a small lerp factor; clamp yaw to magnetometer/true heading if it drifts.
+This keeps you true over longer walks without jarring jumps.
+
+⸻
+
+Minimal implementation sketch (Swift/RealityKit)
+
+Session setup (no GeoTracking):
