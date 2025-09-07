@@ -10,6 +10,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: norio-nomura/action-swiftlint@v3
-        with:
-          args: --strict
+      - name: Install SwiftLint (Homebrew)
+        run: |
+          brew update
+          brew install swiftlint
+      - name: Run SwiftLint
+        run: swiftlint --strict
