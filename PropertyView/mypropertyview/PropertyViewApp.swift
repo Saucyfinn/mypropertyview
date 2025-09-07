@@ -10,4 +10,3 @@ struct PropertyviewApp: App {
         }
     }
 }
-

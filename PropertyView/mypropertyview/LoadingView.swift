@@ -4,7 +4,7 @@ struct LoadingView: View {
     @EnvironmentObject var appState: AppState
     @State private var isAnimating = false
     @State private var opacity = 0.0
-    
+
     var body: some View {
         ZStack {
             // Background gradient
@@ -14,7 +14,7 @@ struct LoadingView: View {
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
-            
+
             VStack(spacing: 30) {
                 // App Icon/Logo
                 Image(systemName: "map.circle.fill")
@@ -25,21 +25,21 @@ struct LoadingView: View {
                         Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true),
                         value: isAnimating
                     )
-                
+
                 // App Name
                 Text("PropertyView")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .opacity(opacity)
-                
+
                 // Dynamic Loading Text
                 Text(appState.loadingMessage)
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.9))
                     .opacity(opacity)
                     .animation(.easeInOut(duration: 0.3), value: appState.loadingMessage)
-                
+
                 // Loading Indicator
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -65,4 +65,3 @@ struct LoadingView: View {
 //
 //  Created by Brendon Hogg on 30/08/2025.
 //
-

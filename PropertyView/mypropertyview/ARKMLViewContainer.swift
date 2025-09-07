@@ -12,15 +12,15 @@ struct ARKMLViewContainer: UIViewRepresentable {
     @Binding var userLocation: CLLocation?
     @Binding var showRings: Bool
     @Binding var status: String
-    
+
     func makeUIView(context: Context) -> ARSCNView {
         let arView = ARSCNView()
         arView.delegate = context.coordinator
         arView.session.delegate = context.coordinator
-        
+
         // Initialize positioning system
         context.coordinator.setupPositioningSystem(arView: arView)
-        
+
         return arView
     }
 
@@ -28,7 +28,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
         // Update positioning system with new boundary data
         context.coordinator.updateBoundaries(kmlRings, userLocation: userLocation, showRings: showRings)
     }
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -40,34 +40,34 @@ struct ARKMLViewContainer: UIViewRepresentable {
         private let root = SCNNode()
         private var groundY: Float?
         private var lastHash: Int?
-        
+
         // Multi-tier positioning system
         private var positioningManager: PositioningManager?
 
         init(_ parent: ARKMLViewContainer) { self.parent = parent }
-        
+
         func setupPositioningSystem(arView: ARSCNView) {
             self.view = arView
             arView.scene.rootNode.addChildNode(root)
-            
+
             positioningManager = PositioningManager(arView: arView)
             positioningManager?.delegate = self
         }
-        
+
         func updateBoundaries(_ rings: [[CLLocationCoordinate2D]], userLocation: CLLocation?, showRings: Bool) {
             guard showRings, !rings.isEmpty else {
                 parent.status = "Hidden"
                 return
             }
-            
+
             print("ARKMLViewContainer: Updating boundaries with \(rings.count) rings")
             print("User location: \(userLocation?.coordinate.latitude ?? 0), \(userLocation?.coordinate.longitude ?? 0)")
-            
+
             positioningManager?.setBoundaryRings(rings)
         }
-        
+
         // MARK: - PositioningManagerDelegate
-        
+
         func positioningManager(_ manager: PositioningManager, didUpdateStatus status: PositioningStatus) {
             DispatchQueue.main.async {
                 switch status {
@@ -84,7 +84,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 }
             }
         }
-        
+
         func positioningManager(_ manager: PositioningManager, didUpdateMethod method: PositioningMethod) {
             DispatchQueue.main.async {
                 switch method {
@@ -98,7 +98,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 }
             }
         }
-        
+
         func positioningManager(_ manager: PositioningManager, didPositionBoundaries transform: simd_float4x4) {
             // Boundaries are positioned by the positioning system
             print("Boundaries positioned with transform: \(transform)")
@@ -108,8 +108,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
         func render(kmlRings: [[CLLocationCoordinate2D]],
                     user: CLLocation?,
                     in v: ARSCNView,
-                    show: Bool)
-        {
+                    show: Bool) {
             guard show else {
                 if parent.status != "Hidden" { parent.status = "Hidden" }
                 root.childNodes.forEach { $0.removeFromParentNode() }
@@ -126,17 +125,17 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 lastHash = nil
                 return
             }
-            
+
             // Legacy code - now handled by PositioningManager
             // This method is kept for compatibility but positioning is handled elsewhere
             return
         }
-        
+
         /// Render boundaries using ARGeoAnchor for precise GPS positioning
         @available(iOS 14.0, *)
         private func renderWithGeoAnchors(kmlRings: [[CLLocationCoordinate2D]], user: CLLocation, in v: ARSCNView) {
             // Clear existing anchors and nodes
-            v.session.getCurrentWorldMap { worldMap, error in
+            v.session.getCurrentWorldMap { _, _ in
                 // Remove existing geo anchors
                 for anchor in v.session.currentFrame?.anchors ?? [] {
                     if anchor is ARGeoAnchor {
@@ -145,16 +144,16 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 }
             }
             root.childNodes.forEach { $0.removeFromParentNode() }
-            
+
             // Create geo anchors for each boundary point
             for (ringIndex, ring) in kmlRings.enumerated() {
                 guard ring.count >= 2 else { continue }
-                
+
                 // Create anchor at first coordinate of the ring
                 let firstCoord = ring[0]
                 let geoAnchor = ARGeoAnchor(coordinate: firstCoord)
                 v.session.add(anchor: geoAnchor)
-                
+
                 // Build polyline relative to the geo anchor
                 var pts: [SCNVector3] = []
                 for coord in ring {
@@ -163,24 +162,22 @@ struct ARKMLViewContainer: UIViewRepresentable {
                     let z = Float(-enu.y)
                     pts.append(SCNVector3(x, 0, z))
                 }
-                
+
                 if let polylineNode = buildPolyline(from: pts, color: .systemBlue, tubeRadius: 0.03, dotRadius: 0.04) {
                     // Store the node to be added when anchor is tracked
                     polylineNode.name = "boundary_ring_\(ringIndex)"
                     geoAnchorNodes[geoAnchor.identifier] = polylineNode
                 }
             }
-            
+
             parent.status = "GPS-anchored \(kmlRings.count) ring(s)"
         }
-        
+
         private var geoAnchorNodes: [UUID: SCNNode] = [:]
 
         private func placeOnGround(_ node: SCNNode, in v: ARSCNView) {
             let y: Float
-            if let g = groundY { y = g + 0.02 }
-            else if let camY = v.pointOfView?.worldPosition.y { y = camY - 1.5 }
-            else { y = 0 }
+            if let g = groundY { y = g + 0.02 } else if let camY = v.pointOfView?.worldPosition.y { y = camY - 1.5 } else { y = 0 }
             node.position.y = y
         }
 

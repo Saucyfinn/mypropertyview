@@ -41,9 +41,7 @@ struct AnyDecodable: Decodable {
     init(from decoder: Decoder) throws {
         let c = try decoder.singleValueContainer()
         if let v = try? c.decode([[[[Double]]]].self) { value = v; return } // MultiPolygon
-        if let v = try? c.decode([[[Double]]].self)  { value = v; return }   // Polygon
+        if let v = try? c.decode([[[Double]]].self) { value = v; return }   // Polygon
         value = []
     }
 }
-
-

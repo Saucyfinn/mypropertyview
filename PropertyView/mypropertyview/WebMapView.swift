@@ -128,7 +128,7 @@ struct WebMapView: UIViewRepresentable {
                 let coordinatesURL = documentsURL.appendingPathComponent("coordinates.json")
                 try jsonData.write(to: coordinatesURL)
                 print("Coordinates saved to:", coordinatesURL.path)
-                
+
                 // Notify AR system that new coordinates are available
                 NotificationCenter.default.post(name: NSNotification.Name("coordinatesUpdated"), object: coordinateData)
             } catch {

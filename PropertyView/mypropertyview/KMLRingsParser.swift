@@ -23,7 +23,7 @@ final class KMLRingsParser: NSObject, XMLParserDelegate {
                 didStartElement elementName: String,
                 namespaceURI: String?,
                 qualifiedName qName: String?,
-                attributes attributeDict: [String : String] = [:]) {
+                attributes attributeDict: [String: String] = [:]) {
         if elementName.lowercased() == "coordinates" {
             insideCoordinates = true
             buffer.removeAll(keepingCapacity: true)
@@ -63,4 +63,3 @@ final class KMLRingsParser: NSObject, XMLParserDelegate {
 //
 //  Created by Brendon Hogg on 28/08/2025.
 //
-

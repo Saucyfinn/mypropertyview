@@ -15,4 +15,3 @@ func coordinatesEqual(_ a: CLLocationCoordinate2D,
 //
 //  Created by Brendon Hogg on 07/09/2025.
 //
-

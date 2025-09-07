@@ -54,98 +54,98 @@ protocol PositioningManagerDelegate: AnyObject {
 class PositioningManager: NSObject {
     weak var delegate: PositioningManagerDelegate?
     private weak var arView: ARSCNView?
-    
+
     private var currentMethod: PositioningMethod = .fallback
     private var currentStatus: PositioningStatus = .initializing
-    
+
     // ARKit GeoTracking
     private var geoAnchorManager: ARGeoAnchorManager?
-    
+
     // Manual Alignment
     private var manualAlignmentManager: ManualAlignmentManager?
-    
+
     // Property data
     private var boundaryRings: [[CLLocationCoordinate2D]] = []
     private var propertyCentroid: CLLocationCoordinate2D?
     private var isDeterminingMethod = false
     private var hasInitialized = false
-    
+
     init(arView: ARSCNView) {
         self.arView = arView
         super.init()
         setupPositioningSystem()
     }
-    
+
     private func setupPositioningSystem() {
         updateStatus(.initializing)
         determineOptimalPositioningMethod()
     }
-    
+
     func startPositioning(for rings: [[CLLocationCoordinate2D]], centroid: CLLocationCoordinate2D) {
         print("PositioningManager: Starting positioning for \(rings.count) boundary rings")
-        
+
         // Validate inputs
         guard !rings.isEmpty else {
             print("ERROR: No boundary rings provided")
             updateStatus(.failed("No boundary data"))
             return
         }
-        
+
         self.boundaryRings = rings
         self.propertyCentroid = centroid
-        
+
         updateStatus(.initializing)
-        
+
         // Add small delay to prevent UI blocking
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.determineOptimalPositioningMethod()
         }
     }
-    
+
     func setBoundaryRings(_ rings: [[CLLocationCoordinate2D]]) {
         // Only update if rings have actually changed (using tolerance)
         guard !ringsEqual(rings, boundaryRings, within: 0.5) else {
             print("PositioningManager: Boundary rings unchanged, skipping update")
             return
         }
-        
+
         self.boundaryRings = rings
         self.propertyCentroid = calculateCentroid(of: rings.first ?? [])
-        
+
         print("PositioningManager: Setting boundary rings with \(rings.count) rings")
         if let centroid = propertyCentroid {
             print("Property centroid: \(centroid.latitude), \(centroid.longitude)")
         }
-        
+
         // Reset flags before restarting positioning
         isDeterminingMethod = false
         hasInitialized = false
-        
+
         // Restart positioning with new data
         determineOptimalPositioningMethod()
     }
-    
+
     private func determineOptimalPositioningMethod() {
         guard !boundaryRings.isEmpty else {
             print("No boundary rings to position")
             return
         }
-        
+
         // Prevent infinite loops by checking if we're already determining method
         guard !isDeterminingMethod else {
             print("Already determining positioning method, skipping")
             return
         }
-        
+
         // Prevent repeated initialization after first successful setup
         guard !hasInitialized else {
             print("Positioning already initialized, skipping")
             return
         }
-        
+
         isDeterminingMethod = true
         print("Determining positioning method for \(boundaryRings.count) rings")
-        
+
         // Priority 1: ARKit GeoTracking (iOS 14+ with VPS coverage)
         if #available(iOS 14.0, *), ARGeoTrackingConfiguration.isSupported {
             print("ARGeoTracking supported, checking availability...")
@@ -158,7 +158,7 @@ class PositioningManager: NSObject {
             initializeManualAlignment()
         }
     }
-    
+
     @available(iOS 14.0, *)
     private func checkGeoTrackingAvailability() {
         guard let centroid = propertyCentroid else {
@@ -168,15 +168,15 @@ class PositioningManager: NSObject {
             initializeManualAlignment()
             return
         }
-        
+
         print("Checking ARGeoTracking availability at: \(centroid.latitude), \(centroid.longitude)")
-        
+
         ARGeoTrackingConfiguration.checkAvailability(at: centroid) { [weak self] available, error in
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                
+
                 self.isDeterminingMethod = false
-                
+
                 if available {
                     print("ARGeoTracking available at location")
                     self.hasInitialized = true
@@ -190,38 +190,37 @@ class PositioningManager: NSObject {
             }
         }
     }
-    
+
     @available(iOS 14.0, *)
     private func useGeoTracking() {
         currentMethod = .geoTracking
         delegate?.positioningManager(self, didUpdateMethod: .geoTracking)
         updateStatus(.geoTrackingAvailable)
-        
+
         guard let arView = arView else { return }
-        
+
         geoAnchorManager = ARGeoAnchorManager(arView: arView) { status in
             // Handle geo anchor status updates
             print("GeoAnchor status: \(status)")
         }
-        
+
         positionBoundaries()
     }
-    
-    
+
     private func initializeManualAlignment() {
         currentMethod = .manualAlignment
         delegate?.positioningManager(self, didUpdateMethod: .manualAlignment)
         updateStatus(.manualAlignmentRequired)
-        
+
         guard let arView = arView else {
             print("ARView not available for manual alignment")
             return
         }
-        
+
         print("Initializing manual alignment manager")
         manualAlignmentManager = ManualAlignmentManager(arView: arView)
         manualAlignmentManager?.delegate = self
-        
+
         // Add timeout to prevent infinite blocking
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             guard let self = self else { return }
@@ -229,7 +228,7 @@ class PositioningManager: NSObject {
             self.manualAlignmentManager?.startAlignment(for: self.boundaryRings)
         }
     }
-    
+
     private func positionBoundaries() {
         switch currentMethod {
         case .geoTracking:
@@ -241,14 +240,14 @@ class PositioningManager: NSObject {
             positionWithFallback()
         }
     }
-    
+
     @available(iOS 14.0, *)
     private func positionWithGeoTracking() {
         guard let geoAnchorManager = geoAnchorManager else {
             print("ERROR: geoAnchorManager is nil")
             return
         }
-        
+
         print("Positioning with GeoTracking: \(boundaryRings.count) rings")
         for (i, ring) in boundaryRings.enumerated() {
             print("Ring \(i): \(ring.count) coordinates")
@@ -256,35 +255,35 @@ class PositioningManager: NSObject {
                 print("  First coord: \(first.latitude), \(first.longitude)")
             }
         }
-        
+
         geoAnchorManager.addBoundaryRings(boundaryRings)
         updateStatus(.positioned)
     }
-    
+
     private func positionWithFallback() {
         // Use existing relative positioning system
         updateStatus(.positioned)
     }
-    
+
     // MARK: - Utility Methods
-    
+
     private func calculateCentroid(of ring: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D {
         guard !ring.isEmpty else { return CLLocationCoordinate2D(latitude: 0, longitude: 0) }
-        
+
         var totalLat = 0.0
         var totalLon = 0.0
-        
+
         for coord in ring {
             totalLat += coord.latitude
             totalLon += coord.longitude
         }
-        
+
         return CLLocationCoordinate2D(
             latitude: totalLat / Double(ring.count),
             longitude: totalLon / Double(ring.count)
         )
     }
-    
+
     private func updateStatus(_ status: PositioningStatus) {
         currentStatus = status
         delegate?.positioningManager(self, didUpdateStatus: status)
@@ -298,7 +297,7 @@ extension PositioningManager: ManualAlignmentManagerDelegate {
         updateStatus(.positioned)
         delegate?.positioningManager(self, didPositionBoundaries: transform)
     }
-    
+
     func manualAlignmentManagerDidCancel(_ manager: ManualAlignmentManager) {
         updateStatus(.failed("Manual alignment cancelled"))
     }

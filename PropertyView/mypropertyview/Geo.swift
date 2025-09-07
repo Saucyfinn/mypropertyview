@@ -15,13 +15,13 @@ struct Geo {
         let east  = dLon * mPerDegLon
         return SIMD3<Float>(Float(east), 0, Float(-north))  // x=east, y=up, z=south(-north)
     }
-    
+
     /// Legacy function for backward compatibility
     static func enuDelta(from origin: CLLocation, to target: CLLocationCoordinate2D) -> (x: Double, y: Double) {
         let result = enu(from: origin.coordinate, to: target)
         return (x: Double(result.x), y: Double(-result.z)) // Convert back to north-positive
     }
-    
+
     /// Legacy function for backward compatibility
     static func enuDelta(from origin: CLLocationCoordinate2D, to target: CLLocationCoordinate2D) -> (x: Double, y: Double) {
         let result = enu(from: origin, to: target)

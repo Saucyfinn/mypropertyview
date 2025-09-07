@@ -136,26 +136,26 @@ struct ARTab: View {
     }
 
     // MARK: - Coordinate Management
-    
+
     private func loadSavedCoordinates() {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             print("Could not find Documents directory")
             return
         }
         let coordinatesURL = documentsURL.appendingPathComponent("coordinates.json")
-        
+
         do {
             let data = try Data(contentsOf: coordinatesURL)
             let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-            
+
             if let subjectProperty = json?["subject_property"] as? [String: Any],
                let coordinates = subjectProperty["coordinates"] as? [[String: Double]] {
-                
+
                 let coords = coordinates.compactMap { coord -> CLLocationCoordinate2D? in
                     guard let lat = coord["latitude"], let lon = coord["longitude"] else { return nil }
                     return CLLocationCoordinate2D(latitude: lat, longitude: lon)
                 }
-                
+
                 if !coords.isEmpty {
                     savedCoordinates = [coords]
                     status = "Loaded saved property boundaries (\(coords.count) points)"
@@ -168,7 +168,7 @@ struct ARTab: View {
             print("Failed to load saved coordinates:", error.localizedDescription)
         }
     }
-    
+
     private func setupCoordinateListener() {
         NotificationCenter.default.addObserver(
             forName: NSNotification.Name("coordinatesUpdated"),
@@ -180,18 +180,18 @@ struct ARTab: View {
             }
         }
     }
-    
+
     private func processNewCoordinates(_ coordinateData: [String: Any]) {
         guard let subjectProperty = coordinateData["subject_property"] as? [String: Any],
               let coordinates = subjectProperty["coordinates"] as? [[String: Double]] else {
             return
         }
-        
+
         let coords = coordinates.compactMap { coord -> CLLocationCoordinate2D? in
             guard let lat = coord["latitude"], let lon = coord["longitude"] else { return nil }
             return CLLocationCoordinate2D(latitude: lat, longitude: lon)
         }
-        
+
         if !coords.isEmpty {
             savedCoordinates = [coords]
             if let appellation = subjectProperty["appellation"] as? String {

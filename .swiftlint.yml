@@ -1,0 +1,51 @@
+excluded:
+  - DerivedData
+  - Pods
+  - Carthage
+  - .build
+
+identifier_name:
+  min_length: 1
+  allowed_symbols: ["_"]
+  excluded:
+    - x
+    - y
+    - z
+    - p
+    - q
+    - i
+    - j
+    - k
+    - m
+    - n
+    - r
+    - a
+    - b
+    - vc
+    - mp
+    - ns
+    - up
+    - fc
+    - cl
+    - API_BASE
+    - API_KEY
+
+line_length:
+  warning: 140
+  error: 200
+
+cyclomatic_complexity:
+  warning: 15
+  error: 25
+
+type_body_length:
+  warning: 450
+  error: 700
+
+function_body_length:
+  warning: 80
+  error: 120
+
+file_length:
+  warning: 700
+  error: 1000
