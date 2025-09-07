@@ -1,20 +1,18 @@
 name: SwiftLint
+
 on:
   push:
+    branches: [ main ]
   pull_request:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Swift
-        uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: "5.10"
-      - name: Install SwiftLint
+      - name: Install SwiftLint (Homebrew)
         run: |
-          curl -sL https://raw.githubusercontent.com/realm/SwiftLint/master/Script/bootstrap | bash
-          sudo mv swiftlint /usr/local/bin/
+          brew update
+          brew install swiftlint
       - name: Run SwiftLint
-        run: swiftlint lint --reporter github-actions-logging
+        run: swiftlint --strict
