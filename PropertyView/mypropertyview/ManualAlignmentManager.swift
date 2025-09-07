@@ -2,6 +2,7 @@ import Foundation
 import ARKit
 import SceneKit
 import CoreLocation
+// swiftlint:disable type_body_length
 
 // Data structure for alignment points saved from web interface
 struct AlignmentData: Codable {
@@ -668,3 +669,4 @@ class ManualAlignmentManager: NSObject {
         return simd_float3(east, 0, north)
     }
 }
+// swiftlint:enable type_body_length

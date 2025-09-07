@@ -181,7 +181,7 @@ class ARGeoAnchorManager: NSObject, ARSessionDelegate {
             if let geoAnchor = anchor as? ARGeoAnchor {
                 // Find and update the corresponding boundary node
                 DispatchQueue.main.async {
-                    if let anchorNode = self.arView?.scene.rootNode.childNode(withName: "gps_boundary_\(geoAnchor.identifier)", recursively: false) {
+                    if let anchorNode = self.arView?.scene.rootNode.childNode(withName: "gps_boundary_\(geoAnchor.identifier)", recursively: false) { // swiftlint:disable:this line_length
                         anchorNode.simdTransform = geoAnchor.transform
                     }
                 }

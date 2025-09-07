@@ -12,8 +12,8 @@ private func ringEqual(_ lhs: [CLLocationCoordinate2D],
                        _ rhs: [CLLocationCoordinate2D],
                        within meters: CLLocationDistance = 0.5) -> Bool {
     guard lhs.count == rhs.count else { return false }
-    for (a, b) in zip(lhs, rhs) {
-        if !coordinatesEqual(a, b, within: meters) { return false }
+    for (a, b) in zip(lhs, rhs) where !coordinatesEqual(a, b, within: meters) {
+        return false
     }
     return true
 }
@@ -23,8 +23,8 @@ private func ringsEqual(_ lhs: [[CLLocationCoordinate2D]],
                         _ rhs: [[CLLocationCoordinate2D]],
                         within meters: CLLocationDistance = 0.5) -> Bool {
     guard lhs.count == rhs.count else { return false }
-    for (ra, rb) in zip(lhs, rhs) {
-        if !ringEqual(ra, rb, within: meters) { return false }
+    for (ra, rb) in zip(lhs, rhs) where !ringEqual(ra, rb, within: meters) {
+        return false
     }
     return true
 }

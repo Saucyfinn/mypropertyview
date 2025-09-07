@@ -24,7 +24,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
         return arView
     }
 
-    func updateUIView(_ v: ARSCNView, context: Context) {
+    func updateUIView(_ arView: ARSCNView, context: Context) {
         // Update positioning system with new boundary data
         context.coordinator.updateBoundaries(kmlRings, userLocation: userLocation, showRings: showRings)
     }
@@ -107,7 +107,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
         /// Build & place rings using ARGeoAnchor for precise GPS positioning
         func render(kmlRings: [[CLLocationCoordinate2D]],
                     user: CLLocation?,
-                    in v: ARSCNView,
+                    in arView: ARSCNView,
                     show: Bool) {
             guard show else {
                 if parent.status != "Hidden" { parent.status = "Hidden" }
@@ -119,7 +119,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 if parent.status != "Waiting for GPS…" { parent.status = "Waiting for GPS…" }
                 return
             }
-            guard let first = kmlRings.first, first.count >= 2 else {
+            guard let firstRing = kmlRings.first, firstRing.count >= 2 else {
                 if parent.status != "Load rings to display" { parent.status = "Load rings to display" }
                 root.childNodes.forEach { $0.removeFromParentNode() }
                 lastHash = nil
@@ -128,42 +128,41 @@ struct ARKMLViewContainer: UIViewRepresentable {
 
             // Legacy code - now handled by PositioningManager
             // This method is kept for compatibility but positioning is handled elsewhere
-            return
         }
 
         /// Render boundaries using ARGeoAnchor for precise GPS positioning
         @available(iOS 14.0, *)
-        private func renderWithGeoAnchors(kmlRings: [[CLLocationCoordinate2D]], user: CLLocation, in v: ARSCNView) {
+        private func renderWithGeoAnchors(kmlRings: [[CLLocationCoordinate2D]], user: CLLocation, in arView: ARSCNView) {
             // Clear existing anchors and nodes
-            v.session.getCurrentWorldMap { _, _ in
-                // Remove existing geo anchors
-                for anchor in v.session.currentFrame?.anchors ?? [] {
-                    if anchor is ARGeoAnchor {
-                        v.session.remove(anchor: anchor)
-                    }
+            arView.session.getCurrentWorldMap { _, _ in
+                // Remove existing geo anchors (Prefer For-Where / pattern matching)
+                let anchors = arView.session.currentFrame?.anchors ?? []
+                for case let geoAnchor as ARGeoAnchor in anchors {
+                    arView.session.remove(anchor: geoAnchor)
                 }
             }
             root.childNodes.forEach { $0.removeFromParentNode() }
 
             // Create geo anchors for each boundary point
-            for (ringIndex, ring) in kmlRings.enumerated() {
-                guard ring.count >= 2 else { continue }
-
+            for (ringIndex, ring) in kmlRings.enumerated() where ring.count >= 2 {
                 // Create anchor at first coordinate of the ring
                 let firstCoord = ring[0]
                 let geoAnchor = ARGeoAnchor(coordinate: firstCoord)
-                v.session.add(anchor: geoAnchor)
+                arView.session.add(anchor: geoAnchor)
 
                 // Build polyline relative to the geo anchor
-                var pts: [SCNVector3] = []
-                for coord in ring {
-                    let enu = Geo.enuDelta(from: CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude), to: coord)
-                    let x = Float(enu.x)
-                    let z = Float(-enu.y)
-                    pts.append(SCNVector3(x, 0, z))
+                var points: [SCNVector3] = []
+                for coordinate in ring {
+                    let enu = Geo.enuDelta(
+                        from: CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude),
+                        to: coordinate
+                    )
+                    let xMeters = Float(enu.x)
+                    let zMeters = Float(-enu.y)
+                    points.append(SCNVector3(xMeters, 0, zMeters))
                 }
 
-                if let polylineNode = buildPolyline(from: pts, color: .systemBlue, tubeRadius: 0.03, dotRadius: 0.04) {
+                if let polylineNode = buildPolyline(from: points, color: .systemBlue, tubeRadius: 0.03, dotRadius: 0.04) {
                     // Store the node to be added when anchor is tracked
                     polylineNode.name = "boundary_ring_\(ringIndex)"
                     geoAnchorNodes[geoAnchor.identifier] = polylineNode
@@ -175,29 +174,37 @@ struct ARKMLViewContainer: UIViewRepresentable {
 
         private var geoAnchorNodes: [UUID: SCNNode] = [:]
 
-        private func placeOnGround(_ node: SCNNode, in v: ARSCNView) {
+        private func placeOnGround(_ node: SCNNode, in arView: ARSCNView) {
             let y: Float
-            if let g = groundY { y = g + 0.02 } else if let camY = v.pointOfView?.worldPosition.y { y = camY - 1.5 } else { y = 0 }
+            if let ground = groundY {
+                y = ground + 0.02
+            } else if let cameraY = arView.pointOfView?.worldPosition.y {
+                y = cameraY - 1.5
+            } else {
+                y = 0
+            }
             node.position.y = y
         }
 
-        private func buildPolyline(from pts: [SCNVector3],
+        private func buildPolyline(from points: [SCNVector3],
                                    color: UIColor,
                                    tubeRadius: CGFloat,
                                    dotRadius: CGFloat) -> SCNNode? {
-            guard pts.count >= 2 else { return nil }
+            guard points.count >= 2 else { return nil }
             let group = SCNNode()
-            // edges
-            for i in 0..<pts.count {
-                let a = pts[i]
-                let b = pts[(i + 1) % pts.count]
-                let seg = cylinderNode(from: a, to: b, radius: tubeRadius, color: color)
-                seg.name = "polyline_segment"
-                group.addChildNode(seg)
+
+            // Edges (close the ring by connecting last -> first)
+            for index in 0..<points.count {
+                let startPoint = points[index]
+                let endPoint = points[(index + 1) % points.count]
+                let segment = cylinderNode(from: startPoint, to: endPoint, radius: tubeRadius, color: color)
+                segment.name = "polyline_segment"
+                group.addChildNode(segment)
             }
-            // corner dots
-            for p in pts {
-                let dot = sphereNode(at: p, radius: dotRadius, color: color)
+
+            // Corner dots
+            for position in points {
+                let dot = sphereNode(at: position, radius: dotRadius, color: color)
                 dot.name = "polyline_dot"
                 group.addChildNode(dot)
             }
@@ -206,53 +213,66 @@ struct ARKMLViewContainer: UIViewRepresentable {
 
         private func ringCentroid(of ring: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
             guard !ring.isEmpty else { return nil }
-            var sLat = 0.0, sLon = 0.0
-            for c in ring { sLat += c.latitude; sLon += c.longitude }
-            return .init(latitude: sLat / Double(ring.count), longitude: sLon / Double(ring.count))
+            var sumLat = 0.0
+            var sumLon = 0.0
+            for coordinate in ring {
+                sumLat += coordinate.latitude
+                sumLon += coordinate.longitude
+            }
+            return .init(latitude: sumLat / Double(ring.count), longitude: sumLon / Double(ring.count))
         }
 
-        private func cylinderNode(from a: SCNVector3, to b: SCNVector3, radius: CGFloat, color: UIColor) -> SCNNode {
-            let v = SCNVector3(b.x - a.x, b.y - a.y, b.z - a.z)
-            let len = sqrt(v.x*v.x + v.y*v.y + v.z*v.z)
-            if len < 0.001 { return SCNNode() }
-            let cyl = SCNCylinder(radius: radius, height: CGFloat(len))
-            cyl.radialSegmentCount = 12
-            let m = SCNMaterial()
-            m.diffuse.contents = color
-            m.emission.contents = color
-            cyl.materials = [m]
-            let node = SCNNode(geometry: cyl)
-            node.position = SCNVector3((a.x + b.x)/2, (a.y + b.y)/2, (a.z + b.z)/2)
+        private func cylinderNode(from start: SCNVector3, to end: SCNVector3, radius: CGFloat, color: UIColor) -> SCNNode {
+            let vector = SCNVector3(end.x - start.x, end.y - start.y, end.z - start.z)
+            let length = sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z)
+            if length < 0.001 { return SCNNode() }
+
+            let cylinder = SCNCylinder(radius: radius, height: CGFloat(length))
+            cylinder.radialSegmentCount = 12
+            let material = SCNMaterial()
+            material.diffuse.contents = color
+            material.emission.contents = color
+            cylinder.materials = [material]
+
+            let node = SCNNode(geometry: cylinder)
+            node.position = SCNVector3((start.x + end.x) / 2, (start.y + end.y) / 2, (start.z + end.z) / 2)
 
             let up = SCNVector3(0, 1, 0)
-            let dir = SCNVector3(v.x/len, v.y/len, v.z/len)
-            let axis = up.cross(dir)
-            let axisLen = sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z)
-            if axisLen > 1e-6 {
-                let dot = max(min(up.dot(dir), 1), -1)
-                let angle = acosf(dot)
-                node.rotation = SCNVector4(axis.x/axisLen, axis.y/axisLen, axis.z/axisLen, angle)
-            } else if up.dot(dir) < 0 {
+            let direction = SCNVector3(vector.x / length, vector.y / length, vector.z / length)
+            let axis = up.cross(direction)
+            let axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
+
+            if axisLength > 1e-6 {
+                let clampedDot = max(min(up.dot(direction), 1), -1)
+                let angle = acosf(clampedDot)
+                node.rotation = SCNVector4(axis.x / axisLength, axis.y / axisLength, axis.z / axisLength, angle)
+            } else if up.dot(direction) < 0 {
                 node.rotation = SCNVector4(1, 0, 0, Float.pi)
             }
             return node
         }
 
-        private func sphereNode(at p: SCNVector3, radius: CGFloat, color: UIColor) -> SCNNode {
-            let s = SCNSphere(radius: radius)
-            let m = SCNMaterial()
-            m.diffuse.contents = color
-            m.emission.contents = color
-            s.materials = [m]
-            let n = SCNNode(geometry: s)
-            n.position = p
-            return n
+        private func sphereNode(at position: SCNVector3, radius: CGFloat, color: UIColor) -> SCNNode {
+            let sphere = SCNSphere(radius: radius)
+            let material = SCNMaterial()
+            material.diffuse.contents = color
+            material.emission.contents = color
+            sphere.materials = [material]
+            let node = SCNNode(geometry: sphere)
+            node.position = position
+            return node
         }
     }
 }
 
 // MARK: - Tiny helpers
 private extension SCNVector3 {
-    func dot(_ o: SCNVector3) -> Float { x*o.x + y*o.y + z*o.z }
-    func cross(_ o: SCNVector3) -> SCNVector3 { SCNVector3(y*o.z - z*o.y, z*o.x - x*o.z, x*o.y - y*o.x) }
+    func dot(_ other: SCNVector3) -> Float { x * other.x + y * other.y + z * other.z }
+    func cross(_ other: SCNVector3) -> SCNVector3 {
+        SCNVector3(
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x
+        )
+    }
 }
