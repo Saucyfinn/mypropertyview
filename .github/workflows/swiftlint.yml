@@ -1,6 +1,3 @@
-cd ~/Documents/Projects/Windsurf/mypropertyview/mypropertyview
-mkdir -p .github/workflows
-nano .github/workflows/swiftlint.yml
 name: SwiftLint
 
 on:
