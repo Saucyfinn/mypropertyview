@@ -76,7 +76,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 case .geoTrackingAvailable:
                     self.parent.status = "GPS tracking available"
                 case .manualAlignmentRequired:
-                    self.parent.status = "Tap two property corners to align"
+                    self.parent.status = "GPS tracking unavailable - Using manual alignment"
                 case .positioned:
                     self.parent.status = "Boundaries positioned"
                 case .failed(let error):
@@ -91,6 +91,7 @@ struct ARKMLViewContainer: UIViewRepresentable {
                 case .geoTracking:
                     print("Using ARKit GeoTracking")
                 case .manualAlignment:
+                    self.parent.status = "GeoTracking unavailable - Select corners on map first"
                     print("Using manual alignment")
                 case .fallback:
                     print("Using fallback positioning")

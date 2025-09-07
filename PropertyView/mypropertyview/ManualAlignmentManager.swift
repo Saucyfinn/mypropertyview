@@ -53,6 +53,7 @@ class ManualAlignmentManager: NSObject {
     }
     
     private var currentState: AlignmentState = .selectingFirstCorner
+    private var selectedPinIndex: Int?
     
     init(arView: ARSCNView) {
         self.arView = arView
@@ -61,30 +62,47 @@ class ManualAlignmentManager: NSObject {
     }
     
     private func setupGestureRecognizers() {
+        // Remove existing gesture recognizers to avoid conflicts
+        arView?.gestureRecognizers?.forEach { arView?.removeGestureRecognizer($0) }
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        tapGesture.numberOfTapsRequired = 1
         arView?.addGestureRecognizer(tapGesture)
+        
+        // Add pan gesture for dragging pins
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        arView?.addGestureRecognizer(panGesture)
+        
+        print("ManualAlignment: Gesture recognizers set up")
     }
     
     func startAlignment(for rings: [[CLLocationCoordinate2D]]) {
+        print("ManualAlignmentManager: Starting alignment for \(rings.count) rings")
         self.boundaryRings = rings
         
-        // Check if we have pre-selected alignment points from the web interface
-        if let savedPoints = loadSavedAlignmentPoints() {
-            print("Using pre-selected alignment points from web interface")
-            usePreSelectedPoints(savedPoints)
-            return
+        // Ensure we're on main thread for UI operations
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Check if we have pre-selected alignment points from the web interface
+            if let savedPoints = self.loadSavedAlignmentPoints() {
+                print("Using pre-selected alignment points from web interface")
+                self.usePreSelectedPoints(savedPoints)
+                return
+            }
+            
+            // Fallback to AR tap-based alignment
+            print("No pre-selected points found, using AR tap alignment")
+            self.startARTapAlignment()
         }
-        
-        // Fallback to AR tap-based alignment
-        print("No pre-selected points found, using AR tap alignment")
-        startARTapAlignment()
     }
     
     private func startARTapAlignment() {
         self.currentState = .selectingFirstCorner
         
-        clearAlignment()
-        showInstructions("Tap on the first visible property corner")
+        clearAlignmentNodes()
+        showInstructions("Tap pin 1 and move it to the first corner")
+        addAlignmentPins()
         
         // Configure AR session for manual alignment
         let configuration = ARWorldTrackingConfiguration()
@@ -134,19 +152,47 @@ class ManualAlignmentManager: NSObject {
     }
     
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        guard currentState != .completed else { return }
         guard let arView = arView else { return }
         
         let location = gesture.location(in: arView)
+        print("ManualAlignment: Tap detected at \(location)")
         
-        // Perform raycast to find world position (iOS 14+ replacement for deprecated hitTest)
+        // Check if user tapped on a pin first
+        let hitResults = arView.hitTest(location, options: nil)
+        print("ManualAlignment: Hit test found \(hitResults.count) results")
+        
+        for result in hitResults {
+            print("ManualAlignment: Checking node \(result.node.name ?? "unnamed")")
+            // Check if this node or its parent is one of our pins
+            if alignmentNodes.contains(result.node) {
+                let pinIndex = alignmentNodes.firstIndex(of: result.node)!
+                selectedPinIndex = pinIndex
+                print("ManualAlignment: Selected pin \(pinIndex + 1)")
+                showInstructions("Tap where you want to move pin \(pinIndex + 1)")
+                return
+            }
+            if let parent = result.node.parent, alignmentNodes.contains(parent) {
+                let pinIndex = alignmentNodes.firstIndex(of: parent)!
+                selectedPinIndex = pinIndex
+                print("ManualAlignment: Selected pin \(pinIndex + 1) via parent")
+                showInstructions("Tap where you want to move pin \(pinIndex + 1)")
+                return
+            }
+        }
+        
+        print("ManualAlignment: No pin tapped, processing surface tap")
+        
+        // If no pin was tapped, move the selected pin or place next pin
         if #available(iOS 14.0, *) {
-            let query = arView.raycastQuery(from: location, allowing: .estimatedPlane, alignment: .horizontal)
-            guard let query = query else {
-                showInstructions("Unable to create raycast query")
+            guard let query = arView.raycastQuery(from: location, allowing: .estimatedPlane, alignment: .horizontal) else {
+                print("ManualAlignment: Unable to create raycast query")
+                showInstructions("Unable to create raycast query - try tapping on a detected surface")
                 return
             }
             let raycastResults = arView.session.raycast(query)
             guard let raycastResult = raycastResults.first else {
+                print("ManualAlignment: No raycast results")
                 showInstructions("Tap on a detected surface")
                 return
             }
@@ -157,35 +203,110 @@ class ManualAlignmentManager: NSObject {
                 raycastResult.worldTransform.columns.3.z
             )
             
-            handleTapAtPosition(worldPosition)
-        } else {
-            // Fallback for iOS 13
-            let hitTestResults = arView.hitTest(location, types: [.existingPlaneUsingExtent, .estimatedHorizontalPlane])
+            print("ManualAlignment: World position: \(worldPosition)")
             
-            guard let hitResult = hitTestResults.first else {
-                showInstructions("Tap on a detected surface")
-                return
+            // Move selected pin or place next pin
+            if let selectedIndex = selectedPinIndex {
+                print("ManualAlignment: Moving selected pin \(selectedIndex + 1)")
+                // Move the selected pin
+                alignmentNodes[selectedIndex].position = worldPosition
+                if selectedIndex < alignmentPoints.count {
+                    alignmentPoints[selectedIndex] = worldPosition
+                } else {
+                    alignmentPoints.append(worldPosition)
+                }
+                selectedPinIndex = nil
+                
+                // Update state based on how many pins are placed
+                if alignmentPoints.count == 1 {
+                    currentState = .selectingSecondCorner
+                    showInstructions("Tap pin 2 and move it to the second corner")
+                } else if alignmentPoints.count >= 2 {
+                    currentState = .calculating
+                    showInstructions("Calculating alignment...")
+                    calculateAlignment()
+                }
+            } else {
+                print("ManualAlignment: No pin selected, auto-placing next pin")
+                // Auto-select and move the next pin
+                if alignmentPoints.count < 2 && alignmentNodes.count >= 2 {
+                    let nextPinIndex = alignmentPoints.count
+                    alignmentNodes[nextPinIndex].position = worldPosition
+                    alignmentPoints.append(worldPosition)
+                    
+                    if alignmentPoints.count == 1 {
+                        currentState = .selectingSecondCorner
+                        showInstructions("Tap pin 2 and move it to the second corner")
+                    } else if alignmentPoints.count >= 2 {
+                        currentState = .calculating
+                        showInstructions("Calculating alignment...")
+                        calculateAlignment()
+                    }
+                }
             }
-            
-            let worldPosition = SCNVector3(
-                hitResult.worldTransform.columns.3.x,
-                hitResult.worldTransform.columns.3.y,
-                hitResult.worldTransform.columns.3.z
-            )
-            
-            handleTapAtPosition(worldPosition)
         }
     }
     
-    private func handleTapAtPosition(_ worldPosition: SCNVector3) {
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        guard let arView = arView else { return }
         
+        let location = gesture.location(in: arView)
         
-        switch currentState {
-        case .selectingFirstCorner:
-            selectFirstCorner(at: worldPosition)
-        case .selectingSecondCorner:
-            selectSecondCorner(at: worldPosition)
-        case .calculating, .completed:
+        switch gesture.state {
+        case .began:
+            // Check if pan started on a pin
+            let hitResults = arView.hitTest(location, options: nil)
+            for result in hitResults {
+                if let pinIndex = alignmentNodes.firstIndex(of: result.node.parent ?? result.node) {
+                    selectedPinIndex = pinIndex
+                    showInstructions("Dragging pin \(pinIndex + 1)")
+                    break
+                }
+            }
+            
+        case .changed:
+            // Move the selected pin during drag
+            if let selectedIndex = selectedPinIndex {
+                if #available(iOS 14.0, *) {
+                    guard let query = arView.raycastQuery(from: location, allowing: .estimatedPlane, alignment: .horizontal) else { return }
+                    let raycastResults = arView.session.raycast(query)
+                    guard let raycastResult = raycastResults.first else { return }
+                    
+                    let worldPosition = SCNVector3(
+                        raycastResult.worldTransform.columns.3.x,
+                        raycastResult.worldTransform.columns.3.y,
+                        raycastResult.worldTransform.columns.3.z
+                    )
+                    
+                    alignmentNodes[selectedIndex].position = worldPosition
+                }
+            }
+            
+        case .ended:
+            // Finalize pin position
+            if let selectedIndex = selectedPinIndex {
+                let finalPosition = alignmentNodes[selectedIndex].position
+                
+                if selectedIndex < alignmentPoints.count {
+                    alignmentPoints[selectedIndex] = finalPosition
+                } else {
+                    alignmentPoints.append(finalPosition)
+                }
+                
+                selectedPinIndex = nil
+                
+                // Update state based on pins placed
+                if alignmentPoints.count == 1 {
+                    currentState = .selectingSecondCorner
+                    showInstructions("Tap or drag pin 2 to the second corner")
+                } else if alignmentPoints.count >= 2 {
+                    currentState = .calculating
+                    showInstructions("Calculating alignment...")
+                    calculateAlignment()
+                }
+            }
+            
+        default:
             break
         }
     }
@@ -303,7 +424,7 @@ class ManualAlignmentManager: NSObject {
         guard let arView = arView else { return }
         
         // Clear existing alignment markers
-        clearAlignment()
+        clearAlignmentNodes()
         
         // Create boundary nodes
         let centroid = calculateCentroid(of: boundaryRings.first ?? [])
@@ -414,19 +535,102 @@ class ManualAlignmentManager: NSObject {
         print("Manual Alignment: \(message)")
     }
     
-    private func resetAlignment() {
-        alignmentPoints.removeAll()
-        selectedCorners.removeAll()
-        currentState = .selectingFirstCorner
-        clearAlignment()
-        showInstructions("Tap on the first visible property corner")
+    private func addAlignmentPins() {
+        guard let arView = arView else { return }
+        
+        // Check if we have pre-selected alignment points from web map
+        if let savedPoints = loadSavedAlignmentPoints() {
+            print("ManualAlignment: Using saved alignment points from web map")
+            // Convert GPS coordinates to AR world positions
+            let centroid = calculateCentroid(of: boundaryRings.first ?? [])
+            
+            for (index, point) in savedPoints.alignmentPoints.enumerated() {
+                let coord = CLLocationCoordinate2D(latitude: point.latitude, longitude: point.longitude)
+                let enuPosition = gpsToENU(coord, centroid: centroid)
+                
+                let pin = createAlignmentPin(number: index + 1, color: index == 0 ? .red : .blue)
+                pin.position = SCNVector3(enuPosition.x, 0, enuPosition.z)
+                
+                arView.scene.rootNode.addChildNode(pin)
+                alignmentNodes.append(pin)
+                alignmentPoints.append(pin.position)
+                
+                print("ManualAlignment: Placed pin \(index + 1) at GPS position \(coord) -> ENU \(enuPosition)")
+            }
+            
+            if alignmentPoints.count >= 2 {
+                currentState = .calculating
+                showInstructions("Using saved alignment points - calculating...")
+                calculateAlignment()
+                return
+            }
+        }
+        
+        // Fallback: Create pins in front of camera if no saved points
+        let pin1 = createAlignmentPin(number: 1, color: .red)
+        let pin2 = createAlignmentPin(number: 2, color: .blue)
+        
+        // Position pins in front of camera
+        let cameraTransform = arView.session.currentFrame?.camera.transform ?? matrix_identity_float4x4
+        let cameraPosition = SCNVector3(cameraTransform.columns.3.x, cameraTransform.columns.3.y, cameraTransform.columns.3.z)
+        
+        // Place pins 2 meters in front of camera, slightly apart
+        pin1.position = SCNVector3(cameraPosition.x - 0.5, cameraPosition.y - 0.5, cameraPosition.z - 2.0)
+        pin2.position = SCNVector3(cameraPosition.x + 0.5, cameraPosition.y - 0.5, cameraPosition.z - 2.0)
+        
+        arView.scene.rootNode.addChildNode(pin1)
+        arView.scene.rootNode.addChildNode(pin2)
+        
+        alignmentNodes.append(pin1)
+        alignmentNodes.append(pin2)
     }
     
-    private func clearAlignment() {
+    private func createAlignmentPin(number: Int, color: UIColor) -> SCNNode {
+        let pinNode = SCNNode()
+        pinNode.name = "alignmentPin\(number)"
+        
+        // Create pin geometry (cylinder + sphere)
+        let cylinder = SCNCylinder(radius: 0.02, height: 0.3)
+        cylinder.firstMaterial?.diffuse.contents = color
+        let cylinderNode = SCNNode(geometry: cylinder)
+        cylinderNode.position = SCNVector3(0, -0.15, 0)
+        cylinderNode.name = "cylinder\(number)"
+        
+        let sphere = SCNSphere(radius: 0.05)
+        sphere.firstMaterial?.diffuse.contents = color
+        let sphereNode = SCNNode(geometry: sphere)
+        sphereNode.position = SCNVector3(0, 0.05, 0)
+        sphereNode.name = "sphere\(number)"
+        
+        // Add number text
+        let text = SCNText(string: "\(number)", extrusionDepth: 0.01)
+        text.font = UIFont.boldSystemFont(ofSize: 0.1)
+        text.firstMaterial?.diffuse.contents = UIColor.white
+        let textNode = SCNNode(geometry: text)
+        textNode.position = SCNVector3(-0.025, 0.02, 0.06)
+        textNode.scale = SCNVector3(0.5, 0.5, 0.5)
+        textNode.name = "text\(number)"
+        
+        pinNode.addChildNode(cylinderNode)
+        pinNode.addChildNode(sphereNode)
+        pinNode.addChildNode(textNode)
+        
+        print("ManualAlignment: Created pin \(number) with name \(pinNode.name ?? "none")")
+        return pinNode
+    }
+    
+    private func clearAlignmentNodes() {
+        alignmentPoints.removeAll()
+        selectedCorners.removeAll()
         alignmentNodes.forEach { $0.removeFromParentNode() }
         alignmentNodes.removeAll()
         instructionNode?.removeFromParentNode()
         instructionNode = nil
+    }
+    
+    private func resetAlignment() {
+        alignmentPoints.removeAll()
+        selectedCorners.removeAll()
     }
     
     // MARK: - Utility Methods

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		343053602E6D26840010F4E5 /* BoundaryARKitHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 3430535F2E6D26840010F4E5 /* BoundaryARKitHelpers */; };
 		3448E84D2E5FBE1B00959E9A /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 3448E84A2E5FBE1B00959E9A /* index.html */; };
 		3448E84E2E5FBE1B00959E9A /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 3448E84B2E5FBE1B00959E9A /* script.js */; };
 		3448E8642E5FFBC900959E9A /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 3448E8562E5FCF4D00959E9A /* style.css */; };
@@ -24,6 +25,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				343053602E6D26840010F4E5 /* BoundaryARKitHelpers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +75,7 @@
 			);
 			name = PropertyView;
 			packageProductDependencies = (
+				3430535F2E6D26840010F4E5 /* BoundaryARKitHelpers */,
 			);
 			productName = PropertyView;
 			productReference = 3448E8162E5F9FE400959E9A /* PropertyView.app */;
@@ -102,6 +105,9 @@
 			);
 			mainGroup = 3448E80D2E5F9FE400959E9A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3430535E2E6D26840010F4E5 /* XCRemoteSwiftPackageReference "BoundaryARKitHelpers" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3448E8172E5F9FE400959E9A /* Products */;
 			projectDirPath = "";
@@ -341,6 +347,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3430535E2E6D26840010F4E5 /* XCRemoteSwiftPackageReference "BoundaryARKitHelpers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Saucyfinn/BoundaryARKitHelpers";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3430535F2E6D26840010F4E5 /* BoundaryARKitHelpers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3430535E2E6D26840010F4E5 /* XCRemoteSwiftPackageReference "BoundaryARKitHelpers" */;
+			productName = BoundaryARKitHelpers;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3448E80E2E5F9FE400959E9A /* Project object */;
 }

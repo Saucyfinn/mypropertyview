@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		343053412E6D26320010F4E5 /* mypropertyview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = mypropertyview.xcodeproj; sourceTree = "<group>"; };
 		3448E8162E5F9FE400959E9A /* PropertyView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PropertyView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3477B7082E6A730000E07D5C /* mypropertyview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = mypropertyview.xcodeproj; sourceTree = "<group>"; };
 		3477B7722E6A737200E07D5C /* mypropertyview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = mypropertyview.xcodeproj; sourceTree = "<group>"; };
@@ -44,6 +45,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		343053422E6D26320010F4E5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3448E80D2E5F9FE400959E9A = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +135,10 @@
 			productRefGroup = 3448E8172E5F9FE400959E9A /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 343053422E6D26320010F4E5 /* Products */;
+					ProjectRef = 343053412E6D26320010F4E5 /* mypropertyview.xcodeproj */;
+				},
 				{
 					ProductGroup = 3477B7732E6A737200E07D5C /* Products */;
 					ProjectRef = 3477B7722E6A737200E07D5C /* mypropertyview.xcodeproj */;

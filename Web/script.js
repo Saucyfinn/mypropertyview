@@ -116,6 +116,7 @@ let subjectCenterLatLng = null;    // center of subject bounds (for zoning butto
 let alignmentMode = false;
 let alignmentPoints = [];
 let alignmentMarkers = [];
+let cornerSelectionPins = [];
 
 function updateSubjectPin(latlng) {
   if (!latlng) return;
@@ -165,12 +166,14 @@ function toggleARAlignment() {
     // Start alignment mode
     alignmentPoints = [];
     clearAlignmentMarkers();
+    addCornerSelectionPins();
     alignBtn.textContent = 'Cancel AR Points';
     alignBtn.classList.add('active');
     setTopText('AR Alignment: <strong>Click 2 property corners</strong>');
   } else {
     // Cancel alignment mode
     clearAlignmentMarkers();
+    clearCornerSelectionPins();
     alignBtn.textContent = 'Set AR Points';
     alignBtn.classList.remove('active');
     const app = getAppellation(subjectFeature?.properties);
@@ -238,6 +241,44 @@ function saveAlignmentPoints() {
   
   // Re-enable AR button
   document.getElementById('ar-btn').disabled = false;
+}
+
+function addCornerSelectionPins() {
+  if (!subjectFeature?.geometry) return;
+  
+  // Get property boundary coordinates
+  let coordinates = [];
+  if (subjectFeature.geometry.type === 'Polygon') {
+    coordinates = subjectFeature.geometry.coordinates[0];
+  } else if (subjectFeature.geometry.type === 'MultiPolygon') {
+    coordinates = subjectFeature.geometry.coordinates[0][0];
+  }
+  
+  if (coordinates.length < 3) return;
+  
+  // Add pins at each corner with "Select Corner" labels
+  coordinates.slice(0, -1).forEach((coord, index) => {
+    const latlng = L.latLng(coord[1], coord[0]);
+    
+    const pin = L.marker(latlng, {
+      icon: L.divIcon({
+        className: 'corner-selection-pin',
+        html: `<div class="pin-content">
+                 <div class="pin-icon">📍</div>
+                 <div class="pin-label">Select Corner ${index + 1}</div>
+               </div>`,
+        iconSize: [120, 60],
+        iconAnchor: [60, 50]
+      })
+    }).addTo(map);
+    
+    cornerSelectionPins.push(pin);
+  });
+}
+
+function clearCornerSelectionPins() {
+  cornerSelectionPins.forEach(pin => map.removeLayer(pin));
+  cornerSelectionPins = [];
 }
 
 function extractCoordinatesFromFeature(feature) {

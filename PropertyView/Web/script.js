@@ -39,14 +39,21 @@ const AppPanel = L.Control.extend({
     btnX.textContent = 'Export KML';
     btnX.disabled = true;
 
+    // AR Alignment button
+    const btnAR = L.DomUtil.create('button', '', div);
+    btnAR.id = 'ar-alignment';
+    btnAR.textContent = 'Set AR Points';
+    btnAR.style.display = 'none';
+    btnAR.disabled = true;
+
     // Appellation readout
     const status = L.DomUtil.create('div', 'pv-status', div);
     status.id = 'pv-status';
     status.innerHTML = 'Appellation: <strong>—</strong>';
 
-
     L.DomEvent.disableClickPropagation(div);
     this._exportBtn = btnX;
+    this._arBtn = btnAR;
     this._statusDiv = status;
     return div;
   }
@@ -60,6 +67,12 @@ let subjectPin = null;
 let subjectFeature = null;         // chosen subject GeoJSON feature
 let currentQueryLatLng = null;     // query origin (used to choose subject)
 let subjectCenterLatLng = null;    // center of subject bounds
+
+// AR Alignment state
+let alignmentMode = false;
+let alignmentPoints = [];
+let alignmentMarkers = [];
+let cornerSelectionPins = [];
 
 function updateSubjectPin(latlng) {
   if (!latlng) return;
@@ -180,6 +193,13 @@ function renderAndCenter(gj) {
 
   // Save coordinates for AR
   saveCoordinatesForAR(subjectFeature, center, app);
+
+  // Show AR alignment button
+  const arBtn = document.getElementById('ar-alignment');
+  if (arBtn) {
+    arBtn.style.display = 'block';
+    arBtn.disabled = false;
+  }
 
   exportBtn.disabled = false;
 }
@@ -329,11 +349,188 @@ function saveCoordinatesForAR(feature, center, appellation) {
   console.log("Coordinates saved for AR:", coordinateData);
 }
 
+// AR Alignment functions
+function toggleARAlignment() {
+  if (!subjectFeature) {
+    alert('Please select a property first by clicking on the map.');
+    return;
+  }
+  
+  alignmentMode = !alignmentMode;
+  const alignBtn = document.getElementById('ar-alignment');
+  
+  if (alignmentMode) {
+    // Start alignment mode
+    alignmentPoints = [];
+    clearAlignmentMarkers();
+    addCornerSelectionPins();
+    alignBtn.textContent = 'Cancel AR Points';
+    alignBtn.classList.add('active');
+    setTopText('AR Alignment: <strong>Click 2 property corners</strong>');
+  } else {
+    // Cancel alignment mode
+    clearAlignmentMarkers();
+    clearCornerSelectionPins();
+    alignBtn.textContent = 'Set AR Points';
+    alignBtn.classList.remove('active');
+    const app = getAppellation(subjectFeature?.properties);
+    setTopText(app ? `Property: <strong>${app}</strong>` : "Property: <strong>Found</strong>");
+  }
+}
+
+function addCornerSelectionPins() {
+  if (!subjectFeature?.geometry) return;
+  
+  // Get property boundary coordinates
+  let coordinates = [];
+  if (subjectFeature.geometry.type === 'Polygon') {
+    coordinates = subjectFeature.geometry.coordinates[0];
+  } else if (subjectFeature.geometry.type === 'MultiPolygon') {
+    coordinates = subjectFeature.geometry.coordinates[0][0];
+  }
+  
+  // Only add 2 pins at strategic corners (first and middle point)
+  if (coordinates.length >= 2) {
+    const cornerIndices = [0, Math.floor(coordinates.length / 2)];
+    
+    cornerIndices.forEach((index, pinNumber) => {
+      const coord = coordinates[index];
+      const pin = L.marker([coord[1], coord[0]], {
+        icon: L.divIcon({
+          className: 'corner-selection-pin',
+          html: `<div class="pin-content">
+                   <div class="pin-icon">📍</div>
+                   <div class="pin-label">Select Corner ${pinNumber + 1}</div>
+                 </div>`,
+          iconSize: [120, 60],
+          iconAnchor: [60, 50]
+        })
+      }).addTo(map);
+      
+      cornerSelectionPins.push(pin);
+    });
+  }
+}
+
+function clearCornerSelectionPins() {
+  cornerSelectionPins.forEach(pin => map.removeLayer(pin));
+  cornerSelectionPins = [];
+}
+
+function clearAlignmentMarkers() {
+  alignmentMarkers.forEach(marker => map.removeLayer(marker));
+  alignmentMarkers = [];
+}
+
+function handleMapClick(e) {
+  if (alignmentMode && alignmentPoints.length < 2) {
+    // Add alignment point
+    alignmentPoints.push({
+      latitude: e.latlng.lat,
+      longitude: e.latlng.lng
+    });
+    
+    // Add visual marker with different colors for each point
+    const markerColor = alignmentPoints.length === 1 ? 'red' : 'blue';
+    const marker = L.circleMarker(e.latlng, {
+      radius: 10,
+      fillColor: markerColor,
+      color: 'white',
+      weight: 3,
+      opacity: 1,
+      fillOpacity: 0.9
+    }).addTo(map);
+    
+    // Add number label to marker
+    marker.bindTooltip(`Point ${alignmentPoints.length}`, {
+      permanent: true,
+      direction: 'top',
+      className: 'alignment-tooltip'
+    });
+    
+    alignmentMarkers.push(marker);
+    
+    console.log(`AR Alignment: Added point ${alignmentPoints.length}`, alignmentPoints[alignmentPoints.length - 1]);
+    
+    if (alignmentPoints.length === 1) {
+      setTopText('AR Alignment: <strong>Click second property corner</strong>');
+    } else if (alignmentPoints.length === 2) {
+      // Save alignment points
+      saveAlignmentPoints();
+      setTopText('AR Alignment: <strong>2 points saved! Ready for AR</strong>');
+      // Don't exit alignment mode immediately - let user manually exit
+      const alignBtn = document.getElementById('ar-alignment');
+      alignBtn.textContent = 'Points Set - Go to AR';
+      alignBtn.classList.add('completed');
+    }
+    return;
+  }
+  
+  // Normal property selection
+  requestParcels(e.latlng.lng, e.latlng.lat, SEARCH_RADIUS_M);
+}
+
+function saveAlignmentPoints() {
+  if (alignmentPoints.length !== 2) return;
+  
+  const alignmentData = {
+    points: alignmentPoints,
+    property: extractCoordinatesFromFeature(subjectFeature),
+    timestamp: new Date().toISOString()
+  };
+  
+  // Send to iOS app
+  if (window.webkit?.messageHandlers?.saveAlignmentPoints) {
+    window.webkit.messageHandlers.saveAlignmentPoints.postMessage(alignmentData);
+  }
+  
+  // Also save to localStorage as backup
+  if (typeof(Storage) !== "undefined") {
+    localStorage.setItem('arAlignmentPoints', JSON.stringify(alignmentData));
+    console.log('AR alignment points saved:', alignmentData);
+  }
+  
+  setTopText('AR Alignment: <strong>Points saved for AR</strong>');
+}
+
+function extractCoordinatesFromFeature(feature) {
+  if (!feature?.geometry) return [];
+  
+  if (feature.geometry.type === 'Polygon') {
+    return feature.geometry.coordinates[0].map(coord => ({
+      latitude: coord[1],
+      longitude: coord[0]
+    }));
+  } else if (feature.geometry.type === 'MultiPolygon') {
+    // Use the largest polygon
+    let largest = feature.geometry.coordinates[0];
+    let maxArea = 0;
+    
+    feature.geometry.coordinates.forEach(poly => {
+      try {
+        const area = turf.area(turf.polygon(poly));
+        if (area > maxArea) {
+          maxArea = area;
+          largest = poly;
+        }
+      } catch (e) { /* ignore */ }
+    });
+    
+    return largest[0].map(coord => ({
+      latitude: coord[1],
+      longitude: coord[0]
+    }));
+  }
+  
+  return [];
+}
+
 // Wire up the buttons
 exportBtn.addEventListener("click", exportKML);
+panel._arBtn.addEventListener("click", toggleARAlignment);
 
 // --- Interactions -----------------------------------------------------------
-map.on("click", (e) => requestParcels(e.latlng.lng, e.latlng.lat, SEARCH_RADIUS_M));
+map.on("click", handleMapClick);
 
 // --- Auto-start on load -----------------------------------------------------
 const qs = new URLSearchParams(location.search);

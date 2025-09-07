@@ -1,0 +1,15 @@
+{
+  "originHash" : "55dfa3b47a0e601a9e795b9baa071b892b488a8239d251e37c8c0625fe217eef",
+  "pins" : [
+    {
+      "identity" : "boundaryarkithelpers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Saucyfinn/BoundaryARKitHelpers",
+      "state" : {
+        "branch" : "main",
+        "revision" : "98df7366879ff174d64639177c09286503a5454a"
+      }
+    }
+  ],
+  "version" : 3
+}
