@@ -83,13 +83,22 @@ function createFloatingControls() {
   document.body.appendChild(neighborsButton);
   neighborsBtn = neighborsButton;
 
+  // AR Alignment button
+  const alignmentButton = document.createElement('button');
+  alignmentButton.className = 'floating-btn';
+  alignmentButton.id = 'ar-alignment';
+  alignmentButton.textContent = 'Set AR Points';
+  alignmentButton.disabled = true;
+  alignmentButton.style.top = '180px';
+  document.body.appendChild(alignmentButton);
+  
   // Export KML button
   const exportButton = document.createElement('button');
   exportButton.className = 'floating-btn';
   exportButton.id = 'pv-export';
   exportButton.textContent = 'Export KML';
   exportButton.disabled = true;
-  exportButton.style.top = '180px';
+  exportButton.style.top = '230px';
   document.body.appendChild(exportButton);
   exportBtn = exportButton;
 }
@@ -102,6 +111,11 @@ let subjectPin = null;
 let subjectFeature = null;         // chosen subject GeoJSON feature
 let currentQueryLatLng = null;     // query origin (used to choose subject)
 let subjectCenterLatLng = null;    // center of subject bounds (for zoning button)
+
+// AR Alignment state
+let alignmentMode = false;
+let alignmentPoints = [];
+let alignmentMarkers = [];
 
 function updateSubjectPin(latlng) {
   if (!latlng) return;
@@ -136,6 +150,126 @@ function toggleNeighbors() {
     }
     neighborsBtn.classList.remove('active');
   }
+}
+
+function toggleARAlignment() {
+  if (!subjectFeature) {
+    alert('Please select a property first by clicking on the map.');
+    return;
+  }
+  
+  alignmentMode = !alignmentMode;
+  const alignBtn = document.getElementById('ar-alignment');
+  
+  if (alignmentMode) {
+    // Start alignment mode
+    alignmentPoints = [];
+    clearAlignmentMarkers();
+    alignBtn.textContent = 'Cancel AR Points';
+    alignBtn.classList.add('active');
+    setTopText('AR Alignment: <strong>Click 2 property corners</strong>');
+  } else {
+    // Cancel alignment mode
+    clearAlignmentMarkers();
+    alignBtn.textContent = 'Set AR Points';
+    alignBtn.classList.remove('active');
+    const app = getAppellation(subjectFeature?.properties);
+    setTopText(app ? `Property: <strong>${app}</strong>` : "Property: <strong>Found</strong>");
+  }
+}
+
+function clearAlignmentMarkers() {
+  alignmentMarkers.forEach(marker => map.removeLayer(marker));
+  alignmentMarkers = [];
+}
+
+function addAlignmentPoint(latlng) {
+  if (alignmentPoints.length >= 2) return;
+  
+  alignmentPoints.push(latlng);
+  
+  // Add visual marker
+  const marker = L.circleMarker(latlng, {
+    color: '#ff3b30',
+    fillColor: '#ff3b30',
+    fillOpacity: 0.8,
+    radius: 8,
+    weight: 2
+  }).addTo(map);
+  
+  alignmentMarkers.push(marker);
+  
+  // Update status
+  if (alignmentPoints.length === 1) {
+    setTopText('AR Alignment: <strong>Click second corner</strong>');
+  } else if (alignmentPoints.length === 2) {
+    // Save alignment points and exit alignment mode
+    saveAlignmentPoints();
+    toggleARAlignment();
+  }
+}
+
+function saveAlignmentPoints() {
+  if (alignmentPoints.length !== 2 || !subjectFeature) return;
+  
+  // Save to coordinates.json for AR system to use
+  const alignmentData = {
+    subjectProperty: {
+      appellation: getAppellation(subjectFeature.properties) || "Unknown Property",
+      alignmentPoints: alignmentPoints.map(p => ({
+        latitude: p.lat,
+        longitude: p.lng
+      })),
+      boundaries: extractCoordinatesFromFeature(subjectFeature)
+    },
+    timestamp: new Date().toISOString()
+  };
+  
+  // Send to native iOS app if available
+  if (window.webkit?.messageHandlers?.saveAlignmentPoints) {
+    window.webkit.messageHandlers.saveAlignmentPoints.postMessage(alignmentData);
+  } else {
+    // Browser fallback - save to localStorage
+    localStorage.setItem('arAlignmentPoints', JSON.stringify(alignmentData));
+    console.log('AR alignment points saved:', alignmentData);
+  }
+  
+  setTopText('AR Alignment: <strong>Points saved for AR</strong>');
+  
+  // Re-enable AR button
+  document.getElementById('ar-btn').disabled = false;
+}
+
+function extractCoordinatesFromFeature(feature) {
+  if (!feature?.geometry) return [];
+  
+  if (feature.geometry.type === 'Polygon') {
+    return feature.geometry.coordinates[0].map(coord => ({
+      latitude: coord[1],
+      longitude: coord[0]
+    }));
+  } else if (feature.geometry.type === 'MultiPolygon') {
+    // Use the largest polygon
+    let largest = feature.geometry.coordinates[0];
+    let maxArea = 0;
+    
+    feature.geometry.coordinates.forEach(poly => {
+      try {
+        const area = turf.area(turf.polygon(poly));
+        if (area > maxArea) {
+          maxArea = area;
+          largest = poly;
+        }
+      } catch (e) { /* ignore */ }
+    });
+    
+    return largest[0].map(coord => ({
+      latitude: coord[1],
+      longitude: coord[0]
+    }));
+  }
+  
+  return [];
 }
 
 function openARView() {
@@ -318,6 +452,9 @@ function renderAndCenter(gj) {
   map.fitBounds(subjectBounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], maxZoom: FIT_MAX_ZOOM });
 
   exportBtn.disabled = false;
+  
+  // Enable AR alignment button
+  document.getElementById('ar-alignment').disabled = false;
 
   // Auto-fetch zoning once when subject selected (button can re-run)
   fetchZoningForSubject(center);
@@ -438,10 +575,17 @@ function exportKML() {
 exportBtn.addEventListener("click", exportKML);
 satelliteBtn.addEventListener("click", toggleSatellite);
 neighborsBtn.addEventListener("click", toggleNeighbors);
+document.getElementById('ar-alignment').addEventListener("click", toggleARAlignment);
 document.getElementById('ar-btn').addEventListener("click", openARView);
 
 // --- Interactions -----------------------------------------------------------
-map.on("click", (e) => requestParcels(e.latlng.lng, e.latlng.lat, SEARCH_RADIUS_M));
+map.on("click", (e) => {
+  if (alignmentMode) {
+    addAlignmentPoint(e.latlng);
+  } else {
+    requestParcels(e.latlng.lng, e.latlng.lat, SEARCH_RADIUS_M);
+  }
+});
 
 // --- Auto-start on load -----------------------------------------------------
 const qs = new URLSearchParams(location.search);

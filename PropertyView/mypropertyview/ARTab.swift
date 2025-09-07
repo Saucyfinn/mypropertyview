@@ -12,6 +12,7 @@ struct ARTab: View {
     @State private var didAutoFetch = false
 
     @State private var bootstrap: ARBootstrap?
+    @State private var savedCoordinates: [[CLLocationCoordinate2D]] = []
 
     // Share sheet
     @State private var shareURL: URL?
@@ -22,21 +23,10 @@ struct ARTab: View {
         if ARWorldTrackingConfiguration.isSupported {
             if #available(iOS 17.0, *) {
                 ARKMLViewContainer(
-                    rings: .constant([]),
-                    origin: $origin,
-                    status: $status,
-                    showNeighbours: .constant(false),
-                    showCorners: .constant(false),
-                    guidanceActive: .constant(false),
-                    yawDegrees: .constant(0),
-                    offsetE: .constant(0),
-                    offsetN: .constant(0),
-                    setAID: .constant(0),
-                    setBID: .constant(0),
-                    solveID: .constant(0),
-                    kmlRings: $rings,               // 🔵 AR renders these
-                    showKML: .constant(true),
-                    useKMLAsSubject: .constant(true)
+                    kmlRings: $savedCoordinates,
+                    userLocation: $origin,
+                    showRings: .constant(true),
+                    status: $status
                 )
                 .ignoresSafeArea()
                 .onAppear {
@@ -47,12 +37,14 @@ struct ARTab: View {
                         )
                         bootstrap?.start()
                     }
+                    loadSavedCoordinates()
+                    setupCoordinateListener()
                 }
-                // Auto-fetch once when we get a location
+                // Load coordinates when they're updated from web
                 .onChange(of: origin) { _, newLoc in
                     guard !didAutoFetch, newLoc != nil else { return }
                     didAutoFetch = true
-                    getParcelsFromBackend()
+                    loadSavedCoordinates() // Try to load saved coordinates first
                 }
             } else {
                 VStack(spacing: 12) {
@@ -140,6 +132,75 @@ struct ARTab: View {
                     status = "Fetch failed: \(error.localizedDescription)"
                 }
             }
+        }
+    }
+
+    // MARK: - Coordinate Management
+    
+    private func loadSavedCoordinates() {
+        guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Could not find Documents directory")
+            return
+        }
+        let coordinatesURL = documentsURL.appendingPathComponent("coordinates.json")
+        
+        do {
+            let data = try Data(contentsOf: coordinatesURL)
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            
+            if let subjectProperty = json?["subject_property"] as? [String: Any],
+               let coordinates = subjectProperty["coordinates"] as? [[String: Double]] {
+                
+                let coords = coordinates.compactMap { coord -> CLLocationCoordinate2D? in
+                    guard let lat = coord["latitude"], let lon = coord["longitude"] else { return nil }
+                    return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                }
+                
+                if !coords.isEmpty {
+                    savedCoordinates = [coords]
+                    status = "Loaded saved property boundaries (\(coords.count) points)"
+                    print("Loaded \(coords.count) boundary coordinates from web selection")
+                    print("First coordinate: \(coords.first!)")
+                    print("Last coordinate: \(coords.last!)")
+                }
+            }
+        } catch {
+            print("Failed to load saved coordinates:", error.localizedDescription)
+        }
+    }
+    
+    private func setupCoordinateListener() {
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("coordinatesUpdated"),
+            object: nil,
+            queue: .main
+        ) { notification in
+            if let coordinateData = notification.object as? [String: Any] {
+                self.processNewCoordinates(coordinateData)
+            }
+        }
+    }
+    
+    private func processNewCoordinates(_ coordinateData: [String: Any]) {
+        guard let subjectProperty = coordinateData["subject_property"] as? [String: Any],
+              let coordinates = subjectProperty["coordinates"] as? [[String: Double]] else {
+            return
+        }
+        
+        let coords = coordinates.compactMap { coord -> CLLocationCoordinate2D? in
+            guard let lat = coord["latitude"], let lon = coord["longitude"] else { return nil }
+            return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        }
+        
+        if !coords.isEmpty {
+            savedCoordinates = [coords]
+            if let appellation = subjectProperty["appellation"] as? String {
+                status = "AR ready: \(appellation) (\(coords.count) points)"
+            } else {
+                status = "AR ready with property boundaries (\(coords.count) points)"
+            }
+            print("Updated AR with \(coords.count) boundary coordinates from web")
+            print("Coordinates range: \(coords.first!) to \(coords.last!)")
         }
     }
 

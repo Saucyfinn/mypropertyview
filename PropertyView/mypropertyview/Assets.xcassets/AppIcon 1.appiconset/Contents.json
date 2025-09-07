@@ -2,6 +2,7 @@
   "images" : [
     {
       "display-gamut" : "sRGB",
+      "filename" : "B+AR.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

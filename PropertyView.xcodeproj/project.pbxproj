@@ -6,24 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		3448E84D2E5FBE1B00959E9A /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 3448E84A2E5FBE1B00959E9A /* index.html */; };
-		3448E84E2E5FBE1B00959E9A /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 3448E84B2E5FBE1B00959E9A /* script.js */; };
-		3448E8642E5FFBC900959E9A /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 3448E8562E5FCF4D00959E9A /* style.css */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		3448E8162E5F9FE400959E9A /* PropertyView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PropertyView.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3448E84A2E5FBE1B00959E9A /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
-		3448E84B2E5FBE1B00959E9A /* script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
-		3448E8562E5FCF4D00959E9A /* style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
+		3477B7082E6A730000E07D5C /* mypropertyview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = mypropertyview.xcodeproj; sourceTree = "<group>"; };
+		3477B7722E6A737200E07D5C /* mypropertyview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = mypropertyview.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3448E8252E5FA44300959E9A /* Exceptions for "PropertyView" folder in "PropertyView" target */ = {
+		3477B78B2E6A737D00E07D5C /* Exceptions for "PropertyView" folder in "PropertyView" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				mypropertyview/Info.plist,
 			);
 			target = 3448E8152E5F9FE400959E9A /* PropertyView */;
 		};
@@ -33,7 +26,7 @@
 		3448E8182E5F9FE400959E9A /* PropertyView */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3448E8252E5FA44300959E9A /* Exceptions for "PropertyView" folder in "PropertyView" target */,
+				3477B78B2E6A737D00E07D5C /* Exceptions for "PropertyView" folder in "PropertyView" target */,
 			);
 			path = PropertyView;
 			sourceTree = "<group>";
@@ -54,7 +47,6 @@
 		3448E80D2E5F9FE400959E9A = {
 			isa = PBXGroup;
 			children = (
-				3448E84C2E5FBE1B00959E9A /* Web */,
 				3448E8182E5F9FE400959E9A /* PropertyView */,
 				3448E8172E5F9FE400959E9A /* Products */,
 			);
@@ -68,14 +60,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3448E84C2E5FBE1B00959E9A /* Web */ = {
+		3477B7092E6A730000E07D5C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3448E8562E5FCF4D00959E9A /* style.css */,
-				3448E84A2E5FBE1B00959E9A /* index.html */,
-				3448E84B2E5FBE1B00959E9A /* script.js */,
 			);
-			path = Web;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3477B7732E6A737200E07D5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,6 +126,16 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3448E8172E5F9FE400959E9A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3477B7732E6A737200E07D5C /* Products */;
+					ProjectRef = 3477B7722E6A737200E07D5C /* mypropertyview.xcodeproj */;
+				},
+				{
+					ProductGroup = 3477B7092E6A730000E07D5C /* Products */;
+					ProjectRef = 3477B7082E6A730000E07D5C /* mypropertyview.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				3448E8152E5F9FE400959E9A /* PropertyView */,
@@ -142,9 +148,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3448E8642E5FFBC900959E9A /* style.css in Resources */,
-				3448E84D2E5FBE1B00959E9A /* index.html in Resources */,
-				3448E84E2E5FBE1B00959E9A /* script.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,14 +294,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YBDN2BGLMW;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PropertyView/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Used to show property boundaries in AR.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Used to find and align the boundary at your position";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PropertyView/mypropertyview/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -322,14 +319,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YBDN2BGLMW;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PropertyView/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Used to show property boundaries in AR.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Used to find and align the boundary at your position";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PropertyView/mypropertyview/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

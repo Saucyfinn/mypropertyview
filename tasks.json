@@ -1,0 +1,5 @@
+{
+    "swift.serverPath": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+    "editor.formatOnSave": true
+  }
+  

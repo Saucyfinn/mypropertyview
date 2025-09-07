@@ -1,6 +1,7 @@
 import SwiftUI
 import WebKit
 import CoreLocation
+import UIKit
 
 struct WebMapView: UIViewRepresentable {
     let url: URL
@@ -8,8 +9,9 @@ struct WebMapView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
         let ucc = WKUserContentController()
-        ucc.add(context.coordinator, name: "getParcels")  // JS -> Swift
-        ucc.add(context.coordinator, name: "exportKML")   // JS -> Swift
+        ucc.add(context.coordinator, name: "getParcels")     // JS -> Swift
+        ucc.add(context.coordinator, name: "exportKML")      // JS -> Swift
+        ucc.add(context.coordinator, name: "saveCoordinates") // JS -> Swift
         config.userContentController = ucc
         config.defaultWebpagePreferences.allowsContentJavaScript = true
 
@@ -58,6 +60,10 @@ struct WebMapView: UIViewRepresentable {
                       let data = Data(base64Encoded: base64),
                       let filename = dict["filename"] as? String else { return }
                 shareKML(data: data, suggestedName: filename)
+
+            case "saveCoordinates":
+                guard let coordinateData = message.body as? [String: Any] else { return }
+                saveCoordinatesFile(coordinateData)
 
             default:
                 break
@@ -109,6 +115,25 @@ struct WebMapView: UIViewRepresentable {
             let av = UIActivityViewController(activityItems: [url], applicationActivities: nil)
             av.excludedActivityTypes = [.assignToContact, .postToFacebook, .postToTwitter]
             presentTop(av)
+        }
+
+        // Save coordinates to app bundle Resources folder
+        private func saveCoordinatesFile(_ coordinateData: [String: Any]) {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: coordinateData, options: .prettyPrinted)
+                guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    print("Could not find Documents directory")
+                    return
+                }
+                let coordinatesURL = documentsURL.appendingPathComponent("coordinates.json")
+                try jsonData.write(to: coordinatesURL)
+                print("Coordinates saved to:", coordinatesURL.path)
+                
+                // Notify AR system that new coordinates are available
+                NotificationCenter.default.post(name: NSNotification.Name("coordinatesUpdated"), object: coordinateData)
+            } catch {
+                print("Failed to save coordinates:", error.localizedDescription)
+            }
         }
 
         private func presentTop(_ vc: UIViewController) {

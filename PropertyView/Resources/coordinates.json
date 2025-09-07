@@ -1,0 +1,17 @@
+{
+  "subject_property": {
+    "coordinates": [
+      {"latitude": -36.8485, "longitude": 174.7633},
+      {"latitude": -36.8486, "longitude": 174.7635},
+      {"latitude": -36.8488, "longitude": 174.7634},
+      {"latitude": -36.8487, "longitude": 174.7632}
+    ],
+    "appellation": "Test Property - Auckland CBD",
+    "center": {
+      "latitude": -36.8486,
+      "longitude": 174.7634
+    },
+    "timestamp": "2025-09-05T13:44:00+12:00"
+  },
+  "neighboring_properties": []
+}

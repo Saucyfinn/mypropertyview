@@ -4,15 +4,6 @@ const SEARCH_RADIUS_M = 80;
 const FIT_PADDING_PX = 24;            // padding around subject bounds
 const FIT_MAX_ZOOM = 18;              // cap zoom when fitting
 
-// Optional: District Plan zoning via WFS (configure per council/vendor).
-// If left blank, the panel will show "Zoning: —".
-const ZONING_WFS = {
-  url: "",                             // e.g. "https://<council>/geoserver/wfs"
-  typeName: "",                        // e.g. "plan:district_zones"
-  srsName: "EPSG:4326",
-  propertyKeys: ["zone","Zone","ZONE","ZONING","Zoning","ZONE_NAME","planning_zone","PlanningZone","zone_desc"],
-  searchRadiusM: 60
-};
 
 // --- Map setup --------------------------------------------------------------
 window.map = L.map("map").setView([-41, 173], 6);
@@ -37,18 +28,12 @@ L.control.scale({ metric: true, imperial: false }).addTo(map);
 const parcels = L.geoJSON(null, { style: { color: "#ff3b30", weight: 2, fill: false } }).addTo(map);
 
 // --- Custom control (topright, under Layers) --------------------------------
-let statusEl, zoneEl, exportBtn, zoneBtn;
 
 const AppPanel = L.Control.extend({
   onAdd: function () {
     const div = L.DomUtil.create('div', 'leaflet-control pv-panel');
 
-    // Buttons row (Get Zoning + Export KML)
-    const btnZ = L.DomUtil.create('button', '', div);
-    btnZ.id = 'pv-zone-btn';
-    btnZ.textContent = 'Get Zoning';
-    btnZ.disabled = true;
-
+    // Export KML button
     const btnX = L.DomUtil.create('button', '', div);
     btnX.id = 'pv-export';
     btnX.textContent = 'Export KML';
@@ -59,38 +44,29 @@ const AppPanel = L.Control.extend({
     status.id = 'pv-status';
     status.innerHTML = 'Appellation: <strong>—</strong>';
 
-    // Zoning readout
-    const zone = L.DomUtil.create('div', 'pv-status', div);
-    zone.id = 'pv-zone';
-    zone.innerHTML = 'Zoning: <strong>—</strong>';
 
     L.DomEvent.disableClickPropagation(div);
-    this._zoneBtn   = btnZ;
     this._exportBtn = btnX;
-    this._statusEl  = status;
-    this._zoneEl    = zone;
+    this._statusDiv = status;
     return div;
   }
 });
 const panel = new AppPanel({ position: 'topright' }).addTo(map);
-zoneBtn   = panel._zoneBtn;
-exportBtn = panel._exportBtn;
-statusEl  = panel._statusEl;
-zoneEl    = panel._zoneEl;
+const exportBtn = panel._exportBtn;
+const statusDiv = panel._statusDiv;
 
 // --- Subject feature + marker ----------------------------------------------
 let subjectPin = null;
 let subjectFeature = null;         // chosen subject GeoJSON feature
 let currentQueryLatLng = null;     // query origin (used to choose subject)
-let subjectCenterLatLng = null;    // center of subject bounds (for zoning button)
+let subjectCenterLatLng = null;    // center of subject bounds
 
 function updateSubjectPin(latlng) {
   if (!latlng) return;
   if (subjectPin) subjectPin.setLatLng(latlng);
   else subjectPin = L.marker(latlng).addTo(map);
 }
-function setTopText(html)  { if (statusEl) statusEl.innerHTML = html; }
-function setZoneText(html) { if (zoneEl)   zoneEl.innerHTML   = html; }
+function setTopText(html) { statusDiv.innerHTML = html; }
 function getAppellation(props) {
   return (props && (props.appellation ?? props.Appellation ?? props.APP ?? props.name)) || null;
 }
@@ -177,9 +153,7 @@ function renderAndCenter(gj) {
     subjectFeature = null;
     subjectCenterLatLng = null;
     setTopText("Appellation: <strong>—</strong>");
-    setZoneText("Zoning: <strong>—</strong>");
     exportBtn.disabled = true;
-    zoneBtn.disabled = true;
     return;
   }
 
@@ -204,11 +178,10 @@ function renderAndCenter(gj) {
   updateSubjectPin(center);
   map.fitBounds(subjectBounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], maxZoom: FIT_MAX_ZOOM });
 
-  exportBtn.disabled = false;
-  zoneBtn.disabled = false;
+  // Save coordinates for AR
+  saveCoordinatesForAR(subjectFeature, center, app);
 
-  // Auto-fetch zoning once when subject selected (button can re-run)
-  fetchZoningForSubject(center);
+  exportBtn.disabled = false;
 }
 
 // --- Native bridge (Swift) -> JS -------------------------------------------
@@ -226,7 +199,6 @@ window.renderParcelsFromBase64 = function (b64) {
 async function requestParcels(lon, lat, r = SEARCH_RADIUS_M) {
   currentQueryLatLng = L.latLng(lat, lon);
   setTopText("Appellation: <strong>finding…</strong>");
-  setZoneText("Zoning: <strong>—</strong>");
 
   if (window.webkit?.messageHandlers?.getParcels) {
     window.webkit.messageHandlers.getParcels.postMessage({ lon, lat, radius: r });
@@ -314,8 +286,50 @@ function exportKML() {
   setTopText("Appellation: <strong>—</strong>");
 }
 
+// --- Save coordinates for AR ------------------------------------------------
+function saveCoordinatesForAR(feature, center, appellation) {
+  if (!feature?.geometry?.coordinates) return;
+  
+  const coordinates = [];
+  const geom = feature.geometry;
+  
+  // Extract coordinates based on geometry type
+  if (geom.type === "Polygon" && geom.coordinates[0]) {
+    // Get outer ring coordinates
+    coordinates.push(...geom.coordinates[0].map(coord => ({
+      latitude: coord[1],
+      longitude: coord[0]
+    })));
+  } else if (geom.type === "MultiPolygon" && geom.coordinates[0]?.[0]) {
+    // Get first polygon's outer ring
+    coordinates.push(...geom.coordinates[0][0].map(coord => ({
+      latitude: coord[1], 
+      longitude: coord[0]
+    })));
+  }
+  
+  const coordinateData = {
+    subject_property: {
+      coordinates: coordinates,
+      appellation: appellation || "Unknown",
+      center: {
+        latitude: center.lat,
+        longitude: center.lng
+      },
+      timestamp: new Date().toISOString()
+    },
+    neighboring_properties: []
+  };
+  
+  // Send to iOS app if available
+  if (window.webkit?.messageHandlers?.saveCoordinates) {
+    window.webkit.messageHandlers.saveCoordinates.postMessage(coordinateData);
+  }
+  
+  console.log("Coordinates saved for AR:", coordinateData);
+}
+
 // Wire up the buttons
-zoneBtn.addEventListener("click", () => fetchZoningForSubject(subjectCenterLatLng));
 exportBtn.addEventListener("click", exportKML);
 
 // --- Interactions -----------------------------------------------------------
