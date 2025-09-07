@@ -56,7 +56,7 @@ class ARGeoAnchorManager: NSObject, ARSessionDelegate {
         onStatusUpdate?("GPS anchors created for \(rings.count) boundaries")
     }
 
-    private func createBoundaryNodeWithAbsoluteCoordinates(for ring: [CLLocationCoordinate2D], centroid: CLLocationCoordinate2D) -> SCNNode {
+    private func createBoundaryNodeWithAbsoluteCoordinates(for ring: [CLLocationCoordinate2D], centroid: CLLocationCoordinate2D) -> SCNNode { // swiftlint:disable:this line_length
         let groupNode = SCNNode()
 
         // Use the new ENU conversion utility
