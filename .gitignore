@@ -95,4 +95,4 @@ DerivedData/
 build/
 *.zip
 PropertyView.zip
-mypropertyview/
+/mypropertyview/
