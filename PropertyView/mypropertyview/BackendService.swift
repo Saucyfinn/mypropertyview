@@ -1,100 +1,193 @@
 import Foundation
 import CoreLocation
 
-/// Backend client for your Replit microservice.
-/// It returns rings as arrays of CLLocationCoordinate2D (outer rings only),
-/// and can also download a KML to a temporary file for sharing.
-enum BackendService {
-    /// ⬇️ SET THIS to your HTTPS Replit URL, e.g.
-    /// https://linz-parcels-saucyfinn.replit.app  OR  https://...repl.co / .replit.dev
-    static var API_BASE = URL(string: "https://parcel-service-Saucyfinn,replit.app")!
+// MARK: - Public service
 
-    private struct FeatureCollection: Decodable { let features: [Feature] }
-    private struct Feature: Decodable { let geometry: Geometry }
-    private struct Geometry: Decodable {
-        let type: String
-        let coordinates: Coordinates
+/// Simple client that fetches boundary rings (GeoJSON → [[CLLocationCoordinate2D]]).
+final class BackendService {
 
-        struct Coordinates: Decodable {
-            let value: Any
-            init(from decoder: Decoder) throws {
-                let c = try decoder.singleValueContainer()
-                if let v = try? c.decode([[[Double]]].self) { value = v; return }       // Polygon
-                if let v = try? c.decode([[[[Double]]]].self) { value = v; return }     // MultiPolygon
-                value = []
-            }
+    static let shared = BackendService()
+
+    /// Base URL of your backend. Update this to your actual host.
+    /// Example: https://your-host.example.com
+    private let apiBaseURL: URL
+    private let urlSession: URLSession
+
+    init(apiBaseURL: URL = URL(string: "https://example.invalid")!,
+         urlSession: URLSession = .shared) {
+        self.apiBaseURL = apiBaseURL
+        self.urlSession = urlSession
+    }
+
+    // MARK: - Fetch (adjust to match your backend)
+
+    /// Fetch rings for a map center + radius (customize query to match your API).
+    func fetchRings(center: CLLocationCoordinate2D,
+                    radiusMeters: Double = 200,
+                    completion: @escaping (Result<[[CLLocationCoordinate2D]], Error>) -> Void) {
+        do {
+            let url = try buildRingsURL(center: center, radiusMeters: radiusMeters)
+            fetchRings(from: url, completion: completion)
+        } catch {
+            completion(.failure(error))
         }
     }
 
-    /// GeoJSON → rings
-    static func parcelsByPoint(lon: Double, lat: Double, radiusM: Double = 150) async throws -> [[CLLocationCoordinate2D]] {
-        var comps = URLComponents(url: API_BASE.appendingPathComponent("/api/parcels/by-point"), resolvingAgainstBaseURL: false)!
-        comps.queryItems = [
-            .init(name: "lon", value: String(lon)),
-            .init(name: "lat", value: String(lat)),
-            .init(name: "radius_m", value: String(Int(radiusM)))
-        ]
-        guard let url = comps.url else { throw URLError(.badURL) }
+    /// Fetch rings from a fully-formed URL (handy for testing).
+    func fetchRings(from url: URL,
+                    completion: @escaping (Result<[[CLLocationCoordinate2D]], Error>) -> Void) {
 
-        let (data, resp) = try await URLSession.shared.data(from: url)
-        guard let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
+        let task = urlSession.dataTask(with: url) { data, response, error in
+            if let error {
+                completion(.failure(error))
+                return
+            }
+            if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+                completion(.failure(BackendError.httpStatus(http.statusCode)))
+                return
+            }
+            guard let data else {
+                completion(.failure(BackendError.emptyResponse))
+                return
+            }
 
-        // Accept both your JSON envelope { rings:[ [ [lon,lat],... ] ] } OR raw GeoJSON FC
-        if let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-           let ringsRaw = obj["rings"] as? [[[Double]]] {
-            return ringsRaw.map { $0.map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) } }
-        }
-
-        // Fallback: decode FeatureCollection GeoJSON
-        let fc = try JSONDecoder().decode(FeatureCollection.self, from: data)
-        var rings: [[CLLocationCoordinate2D]] = []
-        for f in fc.features {
-            switch f.geometry.type {
-            case "Polygon":
-                if let poly = f.geometry.coordinates.value as? [[[Double]]],
-                   let outer = poly.first {
-                    rings.append(outer.map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) })
-                }
-            case "MultiPolygon":
-                if let mp = f.geometry.coordinates.value as? [[[[Double]]]] {
-                    for poly in mp {
-                        if let outer = poly.first {
-                            rings.append(outer.map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) })
-                        }
-                    }
-                }
-            default: break
+            do {
+                let rings = try GeoJSONDecoder.decodeRings(from: data)
+                completion(.success(rings))
+            } catch {
+                completion(.failure(error))
             }
         }
-        return rings
+        task.resume()
     }
 
-    /// Downloads KML for the same point to a temp file and returns its URL (for share sheet).
-    static func parcelsByPointKML(lon: Double, lat: Double, radiusM: Double = 150) async throws -> URL {
-        var comps = URLComponents(url: API_BASE.appendingPathComponent("/api/parcels/by-point.kml"), resolvingAgainstBaseURL: false)!
-        comps.queryItems = [
-            .init(name: "lon", value: String(lon)),
-            .init(name: "lat", value: String(lat)),
-            .init(name: "radius_m", value: String(Int(radiusM)))
+    // MARK: - URL builder (edit to match your server routes & params)
+
+    /// Build the request URL to your backend. Change path/params to your API.
+    private func buildRingsURL(center: CLLocationCoordinate2D,
+                               radiusMeters: Double) throws -> URL {
+        // Example endpoint:  GET /api/rings?lat=..&lon=..&radius=..
+        var components = URLComponents(url: apiBaseURL, resolvingAgainstBaseURL: false)
+        components?.path = "/api/rings"
+        components?.queryItems = [
+            .init(name: "lat", value: String(center.latitude)),
+            .init(name: "lon", value: String(center.longitude)),
+            .init(name: "radius", value: String(radiusMeters))
         ]
-        guard let url = comps.url else { throw URLError(.badURL) }
-
-        let (data, resp) = try await URLSession.shared.data(from: url)
-        guard let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-
-        let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("parcel.kml")
-        try? FileManager.default.removeItem(at: tmp)
-        try data.write(to: tmp, options: .atomic)
-        return tmp
+        guard let url = components?.url else { throw BackendError.invalidURL }
+        return url
     }
 }
 
-//  BackendService.swift
-//  PropertyView
-//
-//  Created by Brendon Hogg on 28/08/2025.
-//
+// MARK: - Errors
+
+enum BackendError: Error, LocalizedError {
+    case invalidURL
+    case httpStatus(Int)
+    case emptyResponse
+    case badGeoJSON
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:        return "Invalid URL."
+        case .httpStatus(let s): return "Server returned HTTP \(s)."
+        case .emptyResponse:     return "The server returned no data."
+        case .badGeoJSON:        return "Unexpected GeoJSON shape."
+        }
+    }
+}
+
+// MARK: - Namespaced GeoJSON models (avoid collisions with other files)
+
+enum BackendGeoJSON {
+    struct FeatureCollection: Decodable {
+        let features: [Feature]
+    }
+
+    struct Feature: Decodable {
+        let geometry: Geometry
+    }
+
+    struct Geometry: Decodable {
+        let type: String
+        let coordinates: Coordinates
+    }
+
+    /// Supports Polygon and MultiPolygon coordinate nesting.
+    enum Coordinates: Decodable {
+        case polygon([[[Double]]])        // [ring][point][lon/lat]
+        case multiPolygon([[[[Double]]]]) // [poly][ring][point][lon/lat]
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+
+            // Try MultiPolygon (depth 4)
+            if let multi = try? container.decode([[[[Double]]]].self) {
+                self = .multiPolygon(multi)
+                return
+            }
+            // Try Polygon (depth 3)
+            if let poly = try? container.decode([[[Double]]].self) {
+                self = .polygon(poly)
+                return
+            }
+            throw BackendError.badGeoJSON
+        }
+    }
+}
+
+// MARK: - GeoJSON → rings decoder
+
+private enum GeoJSONDecoder {
+
+    static func decodeRings(from data: Data) throws -> [[CLLocationCoordinate2D]] {
+        let decoder = JSONDecoder()
+
+        if let collection = try? decoder.decode(BackendGeoJSON.FeatureCollection.self, from: data) {
+            return flatten(collection: collection)
+        }
+
+        if let single = try? decoder.decode(BackendGeoJSON.Feature.self, from: data) {
+            return flatten(feature: single)
+        }
+
+        throw BackendError.badGeoJSON
+    }
+
+    private static func flatten(collection: BackendGeoJSON.FeatureCollection) -> [[CLLocationCoordinate2D]] {
+        collection.features.flatMap { flatten(feature: $0) }
+    }
+
+    private static func flatten(feature: BackendGeoJSON.Feature) -> [[CLLocationCoordinate2D]] {
+        switch feature.geometry.coordinates {
+        case .polygon(let rings3d):
+            return rings3d.compactMap(ring(from:))
+        case .multiPolygon(let polys4d):
+            return polys4d.flatMap { poly in
+                poly.compactMap(ring(from:))
+            }
+        }
+    }
+
+    /// Convert a GeoJSON ring ([[lon, lat], …]) to CLLocationCoordinate2D[].
+    private static func ring(from rawRing: [[Double]]) -> [CLLocationCoordinate2D]? {
+        guard !rawRing.isEmpty else { return nil }
+        var coords: [CLLocationCoordinate2D] = []
+        coords.reserveCapacity(rawRing.count)
+
+        for point in rawRing {
+            guard point.count >= 2 else { continue }
+            let lon = point[0]
+            let lat = point[1]
+            coords.append(CLLocationCoordinate2D(latitude: lat, longitude: lon))
+        }
+
+        // Remove duplicate closing coordinate if present
+        if let first = coords.first, let last = coords.last,
+           first.latitude == last.latitude && first.longitude == last.longitude {
+            _ = coords.popLast()
+        }
+        return coords
+    }
+}
+
