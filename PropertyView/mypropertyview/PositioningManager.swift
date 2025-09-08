@@ -17,7 +17,6 @@ private func ringEqual(_ lhs: [CLLocationCoordinate2D],
     }
     return true
 }
-
 /// True if two ring collections (outer array) match (count + each ring).
 private func ringsEqual(_ lhs: [[CLLocationCoordinate2D]],
                         _ rhs: [[CLLocationCoordinate2D]],
