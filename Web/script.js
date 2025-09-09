@@ -124,6 +124,7 @@ function updateSubjectPin(latlng) {
   else subjectPin = L.marker(latlng).addTo(map);
 }
 function setTopText(html) { if (statusEl) statusEl.innerHTML = html; }
+function setZoneText(html) { if (statusEl) statusEl.innerHTML = html; }
 
 // Toggle functions
 function toggleSatellite() {
