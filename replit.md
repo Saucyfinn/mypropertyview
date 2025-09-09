@@ -14,6 +14,14 @@ The application provides features for viewing property parcels, displaying neigh
 - Improved property boundary visualization with distinct styling for subject (blue solid) and neighbor properties (red dashed)
 - Updated user interface with better organized control panel including view options and status display
 - Configured development server workflow for local testing and development
+- **Enhanced Multi-Tier ARKit Fallback System** - Implemented comprehensive fallback positioning methods to ensure property boundaries can always be displayed in AR regardless of GPS availability or location coverage
+
+**September 2025 - Multi-Tier ARKit Fallback System**
+- **PlaneDetectionFallbackManager** - Uses ARKit plane detection to anchor boundaries to detected surfaces, perfect for indoor environments
+- **VisualMarkerFallbackManager** - Computer vision-based positioning using QR codes or distinctive visual markers for high-precision alignment
+- **CompassBearingFallbackManager** - Device compass-based orientation system for simple user-guided boundary positioning
+- **Enhanced PositioningManager** - Intelligent cascading through all fallback methods with automatic timeouts and seamless transitions
+- **Robust Status System** - Clear status feedback for each positioning method with user guidance when input is needed
 
 # User Preferences
 
