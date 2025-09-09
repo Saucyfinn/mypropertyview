@@ -32,6 +32,9 @@ private func ringsEqual(_ lhs: [[CLLocationCoordinate2D]],
 
 enum PositioningMethod {
     case geoTracking
+    case planeDetection
+    case compassBearing
+    case visualMarker
     case manualAlignment
     case fallback
 }
@@ -39,6 +42,9 @@ enum PositioningMethod {
 enum PositioningStatus {
     case initializing
     case geoTrackingAvailable
+    case planeDetectionActive
+    case compassBearingActive
+    case visualMarkerActive
     case manualAlignmentRequired
     case positioned
     case failed(String)
@@ -60,7 +66,12 @@ class PositioningManager: NSObject {
     // ARKit GeoTracking
     private var geoAnchorManager: ARGeoAnchorManager?
 
-    // Manual Alignment
+    // Fallback Managers
+    private var planeDetectionManager: PlaneDetectionFallbackManager?
+    private var compassBearingManager: CompassBearingFallbackManager?
+    private var visualMarkerManager: VisualMarkerFallbackManager?
+
+    // Manual Alignment (Last resort)
     private var manualAlignmentManager: ManualAlignmentManager?
 
     // Property data
@@ -150,11 +161,11 @@ class PositioningManager: NSObject {
             print("ARGeoTracking supported, checking availability...")
             checkGeoTrackingAvailability()
         } else {
-            print("ARGeoTracking not supported, using manual alignment fallback")
+            print("ARGeoTracking not supported, trying fallback methods...")
             isDeterminingMethod = false
             hasInitialized = true
-            // Priority 2: Manual alignment fallback
-            initializeManualAlignment()
+            // Cascade through fallback options
+            tryFallbackMethods()
         }
     }
 
@@ -184,7 +195,7 @@ class PositioningManager: NSObject {
                     let errorMsg = error?.localizedDescription ?? "Unknown error"
                     print("ARGeoTracking not available at location: \(errorMsg)")
                     self.hasInitialized = true
-                    self.initializeManualAlignment()
+                    self.tryFallbackMethods()
                 }
             }
         }
@@ -204,6 +215,113 @@ class PositioningManager: NSObject {
         }
 
         positionBoundaries()
+    }
+
+    private func tryFallbackMethods() {
+        print("PositioningManager: Cascading through fallback positioning methods...")
+        
+        // Priority 2: Plane Detection (Works indoors, good for property visualization on surfaces)
+        if ARWorldTrackingConfiguration.isSupported {
+            print("Trying plane detection fallback...")
+            initializePlaneDetection()
+            return
+        }
+        
+        // Priority 3: Visual Marker Detection (High accuracy when markers are available)
+        print("Trying visual marker fallback...")
+        initializeVisualMarker()
+    }
+    
+    private func initializePlaneDetection() {
+        currentMethod = .planeDetection
+        delegate?.positioningManager(self, didUpdateMethod: .planeDetection)
+        updateStatus(.planeDetectionActive)
+        
+        guard let arView = arView else {
+            print("ARView not available for plane detection")
+            tryNextFallback()
+            return
+        }
+        
+        print("Initializing plane detection fallback")
+        planeDetectionManager = PlaneDetectionFallbackManager(arView: arView)
+        planeDetectionManager?.delegate = self
+        planeDetectionManager?.startPlaneDetectionFallback(for: boundaryRings)
+        
+        // Set timeout for plane detection
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { [weak self] in
+            if self?.currentMethod == .planeDetection && self?.currentStatus != .positioned {
+                print("Plane detection timeout, trying next fallback...")
+                self?.tryNextFallback()
+            }
+        }
+    }
+    
+    private func initializeVisualMarker() {
+        currentMethod = .visualMarker
+        delegate?.positioningManager(self, didUpdateMethod: .visualMarker)
+        updateStatus(.visualMarkerActive)
+        
+        guard let arView = arView else {
+            print("ARView not available for visual marker detection")
+            tryNextFallback()
+            return
+        }
+        
+        print("Initializing visual marker fallback")
+        visualMarkerManager = VisualMarkerFallbackManager(arView: arView)
+        visualMarkerManager?.delegate = self
+        visualMarkerManager?.startVisualMarkerFallback(for: boundaryRings)
+        
+        // Set timeout for marker detection
+        DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) { [weak self] in
+            if self?.currentMethod == .visualMarker && self?.currentStatus != .positioned {
+                print("Visual marker detection timeout, trying next fallback...")
+                self?.tryNextFallback()
+            }
+        }
+    }
+    
+    private func initializeCompassBearing() {
+        currentMethod = .compassBearing
+        delegate?.positioningManager(self, didUpdateMethod: .compassBearing)
+        updateStatus(.compassBearingActive)
+        
+        guard let arView = arView else {
+            print("ARView not available for compass bearing")
+            tryNextFallback()
+            return
+        }
+        
+        print("Initializing compass bearing fallback")
+        compassBearingManager = CompassBearingFallbackManager(arView: arView)
+        compassBearingManager?.delegate = self
+        compassBearingManager?.startCompassBearingFallback(for: boundaryRings)
+        
+        // Compass bearing doesn't timeout automatically since it requires user input
+    }
+    
+    private func tryNextFallback() {
+        switch currentMethod {
+        case .planeDetection:
+            print("Plane detection failed, trying visual marker...")
+            planeDetectionManager?.stopPlaneDetectionFallback()
+            initializeVisualMarker()
+            
+        case .visualMarker:
+            print("Visual marker failed, trying compass bearing...")
+            visualMarkerManager?.stopVisualMarkerFallback()
+            initializeCompassBearing()
+            
+        case .compassBearing:
+            print("Compass bearing failed, falling back to manual alignment...")
+            compassBearingManager?.stopCompassBearingFallback()
+            initializeManualAlignment()
+            
+        default:
+            print("All fallback methods exhausted, using manual alignment as last resort")
+            initializeManualAlignment()
+        }
     }
 
     private func initializeManualAlignment() {
@@ -232,6 +350,15 @@ class PositioningManager: NSObject {
         switch currentMethod {
         case .geoTracking:
             positionWithGeoTracking()
+        case .planeDetection:
+            // Handled by PlaneDetectionFallbackManager delegate
+            break
+        case .compassBearing:
+            // Handled by CompassBearingFallbackManager delegate
+            break
+        case .visualMarker:
+            // Handled by VisualMarkerFallbackManager delegate
+            break
         case .manualAlignment:
             // Handled by ManualAlignmentManager delegate
             break
@@ -299,5 +426,66 @@ extension PositioningManager: ManualAlignmentManagerDelegate {
 
     func manualAlignmentManagerDidCancel(_ manager: ManualAlignmentManager) {
         updateStatus(.failed("Manual alignment cancelled"))
+    }
+}
+
+// MARK: - PlaneDetectionFallbackDelegate
+
+extension PositioningManager: PlaneDetectionFallbackDelegate {
+    func planeDetectionFallback(_ manager: PlaneDetectionFallbackManager, didDetectSuitablePlane plane: ARPlaneAnchor) {
+        print("PositioningManager: Plane detection found suitable surface")
+    }
+    
+    func planeDetectionFallback(_ manager: PlaneDetectionFallbackManager, didPositionBoundaries transform: simd_float4x4) {
+        updateStatus(.positioned)
+        delegate?.positioningManager(self, didPositionBoundaries: transform)
+    }
+    
+    func planeDetectionFallback(_ manager: PlaneDetectionFallbackManager, didUpdateStatus status: String) {
+        print("PlaneDetectionFallback status: \(status)")
+    }
+}
+
+// MARK: - CompassBearingFallbackDelegate
+
+extension PositioningManager: CompassBearingFallbackDelegate {
+    func compassBearingFallback(_ manager: CompassBearingFallbackManager, didUpdateHeading heading: CLLocationDirection) {
+        print("PositioningManager: Compass heading updated: \(Int(heading))°")
+    }
+    
+    func compassBearingFallback(_ manager: CompassBearingFallbackManager, didPositionBoundaries transform: simd_float4x4) {
+        updateStatus(.positioned)
+        delegate?.positioningManager(self, didPositionBoundaries: transform)
+    }
+    
+    func compassBearingFallback(_ manager: CompassBearingFallbackManager, didUpdateStatus status: String) {
+        print("CompassBearingFallback status: \(status)")
+    }
+    
+    func compassBearingFallback(_ manager: CompassBearingFallbackManager, needsUserInput message: String) {
+        print("CompassBearingFallback needs user input: \(message)")
+        // Could notify delegate about user input requirement
+    }
+}
+
+// MARK: - VisualMarkerFallbackDelegate
+
+extension PositioningManager: VisualMarkerFallbackDelegate {
+    func visualMarkerFallback(_ manager: VisualMarkerFallbackManager, didDetectMarker marker: VNRectangleObservation) {
+        print("PositioningManager: Visual marker detected with confidence: \(marker.confidence)")
+    }
+    
+    func visualMarkerFallback(_ manager: VisualMarkerFallbackManager, didPositionBoundaries transform: simd_float4x4) {
+        updateStatus(.positioned)
+        delegate?.positioningManager(self, didPositionBoundaries: transform)
+    }
+    
+    func visualMarkerFallback(_ manager: VisualMarkerFallbackManager, didUpdateStatus status: String) {
+        print("VisualMarkerFallback status: \(status)")
+    }
+    
+    func visualMarkerFallback(_ manager: VisualMarkerFallbackManager, needsUserAction message: String) {
+        print("VisualMarkerFallback needs user action: \(message)")
+        // Could notify delegate about user action requirement
     }
 }
