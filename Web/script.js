@@ -657,29 +657,20 @@ function autoStart() {
     setTopText("Property: <strong>Getting your location…</strong>");
     navigator.geolocation.getCurrentPosition(p => {
       const { latitude: lat, longitude: lon } = p.coords;
-      map.setView([lat, lon], 17);
+      // Set initial view at user location but don't zoom too much yet
+      map.setView([lat, lon], 15);
+      // Request parcels from LINZ at user's actual location
       requestParcels(lon, lat, SEARCH_RADIUS_M);
     }, error => { 
       console.log("Geolocation failed:", error);
-      // Fallback to Auckland city center for demo
-      const defaultLat = -36.8485;
-      const defaultLng = 174.7633;
-      setTopText("Property: <strong>Click on map to find property</strong>");
-      map.setView([defaultLat, defaultLng], 16);
-      // Auto-search at default location for demo
-      setTimeout(() => {
-        requestParcels(defaultLng, defaultLat, SEARCH_RADIUS_M);
-      }, 1000);
+      setTopText("Property: <strong>Click on map to find your property</strong>");
+      // Start at New Zealand center - user needs to click their location
+      map.setView([-41.0, 174.0], 6);
     }, { enableHighAccuracy: true, timeout: 10000 });
   } else {
-    // No geolocation support - use Auckland default
-    const defaultLat = -36.8485;
-    const defaultLng = 174.7633;
-    setTopText("Property: <strong>Click on map to find property</strong>");
-    map.setView([defaultLat, defaultLng], 16);
-    setTimeout(() => {
-      requestParcels(defaultLng, defaultLat, SEARCH_RADIUS_M);
-    }, 1000);
+    setTopText("Property: <strong>Click on map to find your property</strong>");
+    // Start at New Zealand center - user needs to click their location  
+    map.setView([-41.0, 174.0], 6);
   }
 }
 window.addEventListener("load", autoStart);
