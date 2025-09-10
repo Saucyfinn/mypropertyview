@@ -1,6 +1,6 @@
 // --- Config -----------------------------------------------------------------
 const LINZ_KEY = window.LINZ_API_KEY || "";     // API key from environment
-const SEARCH_RADIUS_M = 80;
+const SEARCH_RADIUS_M = 150;
 
 // Initialize coordinate processor
 let coordinateProcessor = null;
@@ -491,7 +491,18 @@ function renderAndCenter(gj) {
   setTopText(app ? `Property: <strong>${app}</strong>` : "Property: <strong>Found</strong>");
 
   updateSubjectPin(center);
-  map.fitBounds(subjectBounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], maxZoom: FIT_MAX_ZOOM });
+  
+  // Enhanced auto-zoom: ensure we can see the full property
+  const zoom = Math.min(FIT_MAX_ZOOM, Math.max(16, map.getBoundsZoom(subjectBounds)));
+  map.fitBounds(subjectBounds, { 
+    padding: [FIT_PADDING_PX, FIT_PADDING_PX], 
+    maxZoom: zoom 
+  });
+  
+  // Small delay then center perfectly on the property
+  setTimeout(() => {
+    map.panTo(center);
+  }, 500);
 
   exportBtn.disabled = false;
   
@@ -641,12 +652,34 @@ function autoStart() {
     requestParcels(initLng, initLat, SEARCH_RADIUS_M);
     return;
   }
+  
   if (navigator.geolocation) {
+    setTopText("Property: <strong>Getting your location…</strong>");
     navigator.geolocation.getCurrentPosition(p => {
       const { latitude: lat, longitude: lon } = p.coords;
       map.setView([lat, lon], 17);
       requestParcels(lon, lat, SEARCH_RADIUS_M);
-    }, _ => { /* user denied; wait for tap */ }, { enableHighAccuracy: true, timeout: 15000 });
+    }, error => { 
+      console.log("Geolocation failed:", error);
+      // Fallback to Auckland city center for demo
+      const defaultLat = -36.8485;
+      const defaultLng = 174.7633;
+      setTopText("Property: <strong>Click on map to find property</strong>");
+      map.setView([defaultLat, defaultLng], 16);
+      // Auto-search at default location for demo
+      setTimeout(() => {
+        requestParcels(defaultLng, defaultLat, SEARCH_RADIUS_M);
+      }, 1000);
+    }, { enableHighAccuracy: true, timeout: 10000 });
+  } else {
+    // No geolocation support - use Auckland default
+    const defaultLat = -36.8485;
+    const defaultLng = 174.7633;
+    setTopText("Property: <strong>Click on map to find property</strong>");
+    map.setView([defaultLat, defaultLng], 16);
+    setTimeout(() => {
+      requestParcels(defaultLng, defaultLat, SEARCH_RADIUS_M);
+    }, 1000);
   }
 }
 window.addEventListener("load", autoStart);
