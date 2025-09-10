@@ -1,0 +1,60 @@
+PropertyView
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:26:35 Extra arguments at positions #1, #2, #4, #5, #6, #7, #8, #9, #10, #11, #12, #14, #15 in call
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:26:35 Missing arguments for parameters 'userLocation', 'showRings' in call
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:27:29 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:30:38 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:31:35 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:32:38 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:33:34 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:34:31 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:35:31 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:36:30 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:37:30 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:38:31 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:40:31 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:41:39 Cannot infer contextual base in reference to member 'constant'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/ARTab.swift:181:47 Cannot convert value of type 'Void' to expected argument type 'Bool'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:12:35 Referencing subscript 'subscript(dynamicMember:)' requires wrapper 'EnvironmentObject<AppState>.Wrapper'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:12:41 Cannot call value of non-function type 'Binding<Subject>'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:12:41 Value of type 'AppState' has no dynamic member 'bundledWebURL' using key path from root type 'AppState'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:12:61 'nil' requires a contextual type
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:14:14 Generic parameter 'V' could not be inferred
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:14:30 Cannot convert value of type 'String' to expected argument type '() -> V'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:16:26 Referencing subscript 'subscript(dynamicMember:)' requires wrapper 'EnvironmentObject<AppState>.Wrapper'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:16:32 Cannot call value of non-function type 'Binding<Subject>'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:16:32 Value of type 'AppState' has no dynamic member 'bundledWebURL' using key path from root type 'AppState'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:16:52 'nil' requires a contextual type
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:18:14 Instance method 'onChange(of:perform:)' requires that 'Binding<Subject>' conform to 'Equatable'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:18:27 Referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<LocationModel>.Wrapper'
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:18:31 Generic parameter 'Subject' could not be inferred
+
+/Users/brendonhogg/Documents/mypropertyview-enhanced/mypropertyview-enhanced/PropertyView/mypropertyview/MapTab.swift:18:31 Value of type 'LocationModel' has no dynamic member 'last' using key path from root type 'LocationModel'
