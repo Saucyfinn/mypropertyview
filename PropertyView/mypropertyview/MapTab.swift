@@ -22,3 +22,8 @@ struct MapTab: View {
             }
     }
 }
+
+#Preview {
+    MapTab()
+        .environmentObject(AppState())
+}
