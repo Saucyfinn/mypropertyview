@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PropertyView Enhanced</title>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+  /* Enhanced PropertyView Styling */
+  html, body, #map { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  
+  /* Enhanced Floating Controls */
+  .floating-btn {
+    position: fixed;
+    right: 20px;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 25px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    z-index: 1000;
+    min-width: 100px;
+    text-align: center;
+  }
+  
+  .floating-btn:hover {
+    background: rgba(0,0,0,0.95);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+  }
+  
+  .floating-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    background: rgba(100,100,100,0.6);
+  }
+  
+  .floating-btn.active {
+    background: #007AFF;
+    border-color: #007AFF;
+    box-shadow: 0 8px 25px rgba(0,122,255,0.4);
+  }
+  
+  .floating-btn.active:hover {
+    background: #0056b3;
+    box-shadow: 0 12px 35px rgba(0,122,255,0.5);
+  }
+
+  /* Enhanced Property Status Display */
+  .property-status {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 1000;
+    max-width: 300px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  }
+
+  /* Enhanced AR View Button */
+  .ar-view-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0,122,255,0.3);
+    min-width: 150px;
+  }
+
+  .ar-view-btn:hover {
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,122,255,0.4);
+  }
+
+  .ar-view-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: translateX(-50%) !important;
+    background: rgba(100,100,100,0.6);
+  }
+
+  /* Enhanced Property Tooltips */
+  .property-tooltip {
+    background: rgba(0,0,0,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+  }
+
+  .neighbor-tooltip {
+    background: rgba(255,59,48,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    box-shadow: 0 4px 15px rgba(255,59,48,0.3) !important;
+  }
+
+  /* Enhanced Corner Selection Pins */
+  .corner-selection-pin {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .pin-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pin-icon {
+    font-size: 24px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .pin-label {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* Enhanced Leaflet Controls */
+  .leaflet-control-layers {
+    background: rgba(255,255,255,0.95) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+  }
+
+  .leaflet-control-scale {
+    background: rgba(0,0,0,0.8) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /* Enhanced Map Marker */
+  .leaflet-marker-icon {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+
+  /* Enhanced Loading States */
+  .loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .floating-btn {
+      right: 15px;
+      padding: 10px 16px;
+      font-size: 13px;
+      min-width: 85px;
+    }
+    
+    .property-status {
+      left: 15px;
+      right: 15px;
+      max-width: none;
+      font-size: 14px;
+      padding: 12px 16px;
+    }
+    
+    .ar-view-btn {
+      bottom: 20px;
+      font-size: 15px;
+      padding: 12px 25px;
+    }
+  }
+
+  /* Enhanced Search Interface */
+  .search-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    max-width: 400px;
+    width: calc(100% - 40px);
+  }
+
+  .search-input-group {
+    display: flex;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 16px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+  }
+
+  .search-input::placeholder {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .search-button {
+    background: #007AFF;
+    border: none;
+    padding: 12px 16px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .search-button:hover {
+    background: #0056b3;
+  }
+
+  .search-suggestions {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 8px;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: none;
+  }
+
+  .search-suggestion {
+    padding: 10px 16px;
+    color: white;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px;
+  }
+
+  .search-suggestion:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .search-suggestion:last-child {
+    border-bottom: none;
+  }
+
+  /* Enhanced Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .property-status, .floating-btn, .ar-view-btn, .search-container {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style>
+</head>
+
+<body>
+  <!-- Enhanced Address Search -->
+  <div class="search-container">
+    <div class="search-input-group">
+      <input 
+        type="text" 
+        id="search-input" 
+        placeholder="Enter address or coordinates (lat, lng)..."
+        class="search-input"
+      />
+      <button id="search-btn" class="search-button" title="Search for property by address or coordinates">
+        🔍
+      </button>
+    </div>
+    <div id="search-suggestions" class="search-suggestions"></div>
+  </div>
+
+  <!-- Enhanced Map Container -->
+  <div id="map"></div>
+
+  <!-- Enhanced JavaScript Dependencies -->
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Turf.js for geospatial calculations -->
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+  
+  <!-- Enhanced API Integration with Replit Secrets -->
+  <script>
+    // Enhanced API key injection - prioritize Replit secrets, fallback to hardcoded
+    window.LINZ_API_KEY = '';
+    window.LOCATIONIQ_API_KEY = '';
+    window.GOOGLE_API_KEY = '';
+    
+    // Check for environment secrets (server-injected)
+    if (typeof REPLIT_LINZ_API_KEY !== 'undefined') {
+      window.LINZ_API_KEY = REPLIT_LINZ_API_KEY;
+    }
+    if (typeof REPLIT_LOCATIONIQ_KEY !== 'undefined') {
+      window.LOCATIONIQ_API_KEY = REPLIT_LOCATIONIQ_KEY;
+    }
+    if (typeof REPLIT_GOOGLE_API_KEY !== 'undefined') {
+      window.GOOGLE_API_KEY = REPLIT_GOOGLE_API_KEY;
+    }
+    
+    // Fallback to hardcoded keys if secrets not available
+    if (!window.LOCATIONIQ_API_KEY) {
+      window.LOCATIONIQ_API_KEY = 'pk.022a4792ac3437f3ae8d42bf5128cc88';
+    }
+    if (!window.GOOGLE_API_KEY) {
+      window.GOOGLE_API_KEY = 'AIzaSyAw4vQ2HO7S_hZ4U0-C0uPx7SBX88XJLVA';
+    }
+    
+    // Try to get from URL parameter for development
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlKey = urlParams.get('linz_key');
+    if (urlKey) {
+      window.LINZ_API_KEY = urlKey;
+      console.log('LINZ API Key loaded from URL parameter');
+    } else {
+      // Try localStorage as fallback
+      const storedKey = localStorage.getItem('linz_api_key');
+      if (storedKey) {
+        window.LINZ_API_KEY = storedKey;
+        console.log('LINZ API Key loaded from localStorage');
+      }
+    }
+    
+    // Enhanced debugging for development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('PropertyView Enhanced - Development Mode');
+      console.log('LINZ API Key available:', !!window.LINZ_API_KEY);
+      console.log('LocationIQ API Key available:', !!window.LOCATIONIQ_API_KEY);
+      console.log('Google API Key available:', !!window.GOOGLE_API_KEY);
+    }
+  </script>
+  
+  <!-- Enhanced Coordinate Processor -->
+  <script src="coordinate-processor.js"></script>
+  
+  <!-- Enhanced Main Application -->
+  <script src="script.js"></script>
+
+  <!-- Enhanced iOS Integration -->
+  <script>
+    // Enhanced iOS app integration
+    if (window.webkit && window.webkit.messageHandlers) {
+      console.log('PropertyView Enhanced - iOS Integration Active');
+      
+      // Enhanced status reporting to iOS
+      window.reportStatusToiOS = function(status) {
+        if (window.webkit.messageHandlers.statusUpdate) {
+          window.webkit.messageHandlers.statusUpdate.postMessage({
+            status: status,
+            timestamp: new Date().toISOString()
+          });
+        }
+      };
+      
+      // Enhanced location updates to iOS
+      window.reportLocationToiOS = function(lat, lng) {
+        if (window.webkit.messageHandlers.locationUpdate) {
+          window.webkit.messageHandlers.locationUpdate.postMessage({
+            latitude: lat,
+            longitude: lng,
+            timestamp: new Date().toISOString()
+          });
+        }
+      };
+    }
+
+    // Enhanced error handling
+    window.addEventListener('error', function(e) {
+      console.error('PropertyView Enhanced Error:', e.error);
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.errorReport) {
+        window.webkit.messageHandlers.errorReport.postMessage({
+          error: e.error.toString(),
+          filename: e.filename,
+          lineno: e.lineno,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+
+    // Enhanced performance monitoring
+    window.addEventListener('load', function() {
+      const loadTime = performance.now();
+      console.log(`PropertyView Enhanced loaded in ${loadTime.toFixed(2)}ms`);
+      
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.performanceReport) {
+        window.webkit.messageHandlers.performanceReport.postMessage({
+          loadTime: loadTime,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+  </script>
+</body>
+</html>

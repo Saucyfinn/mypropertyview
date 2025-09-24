@@ -1,0 +1,49 @@
+PropertyView-Enhanced
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:153:13 Constant 'timeoutTask' inferred to have type '()', which may be unexpected
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:153:13 Initialization of immutable value 'timeoutTask' was never used; consider replacing with assignment to '_' or removing it
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:272:20 Value 'coordinates' was defined but never used; consider replacing with boolean test
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:272:34 Reference to property 'currentCoordinates' in closure requires explicit use of 'self' to make capture semantics explicit
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:320:47 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:320:61 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:320:75 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:321:43 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:321:55 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:321:67 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:334:40 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:334:49 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:334:58 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:357:47 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:357:61 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:357:75 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:358:43 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:358:55 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:358:67 Cannot convert value of type 'Double' to expected argument type 'Float'
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:386:33 'generateCylinder(height:radius:)' is only available in iOS 18.0 or newer
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:387:13 Variable 'material' was never mutated; consider changing to 'let' constant
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:414:13 Variable 'material' was never mutated; consider changing to 'let' constant
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:504:23 'arView' is inaccessible due to 'private' protection level
+
+/Users/brendonhogg/Desktop/DOWNLOAD_FOR_XCODE/PropertyView-Enhanced/ARTab.swift:508:17 Reference to property 'arManager' in closure requires explicit use of 'self' to make capture semantics explicit

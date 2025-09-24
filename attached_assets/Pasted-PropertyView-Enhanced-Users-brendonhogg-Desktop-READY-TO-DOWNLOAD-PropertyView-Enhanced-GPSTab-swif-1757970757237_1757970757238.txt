@@ -1,0 +1,35 @@
+PropertyView-Enhanced
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:220:20 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:226:22 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:232:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:232:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:238:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:238:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:244:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:244:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:250:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:250:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:256:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:256:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:262:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:262:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:268:18 Consecutive statements on a line must be separated by ';'
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:268:21 Unnecessary check for 'iOS'; enclosing scope ensures guard will always be true
+
+/Users/brendonhogg/Desktop/READY_TO_DOWNLOAD/PropertyView-Enhanced/GPSTab.swift:535:18 'fontDesign' is only available in iOS 16.1 or newer

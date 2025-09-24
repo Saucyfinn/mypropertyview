@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        #map { height: 100vh; width: 100vw; }
+        #controls { 
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+            min-width: 200px;
+        }
+        
+        .toggle-container {
+            margin: 10px 0;
+        }
+        
+        .toggle-container label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .toggle-container input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.3);
+            accent-color: #007AFF;
+        }
+        
+        .ar-button {
+            background: linear-gradient(135deg, #007AFF, #0051D0);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+        
+        .ar-button:hover {
+            background: linear-gradient(135deg, #0051D0, #003A9B);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+        }
+        
+        .ar-button:active {
+            transform: translateY(0);
+        }
+        
+        .ar-button:disabled {
+            background: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <div class="toggle-container">
+            <label>
+                <input type="checkbox" id="neighborsToggle" onchange="toggleNeighbors()">
+                Show Neighbor Properties
+            </label>
+        </div>
+        
+        <button id="arButton" class="ar-button" onclick="openARView()" disabled>
+            🥽 View in AR
+        </button>
+    </div>
+    
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="bridge-api.js"></script>
+    <script>
+        // Initialize logging
+        
+        function log(msg) {
+            console.log(msg);
+            // Use bridge API for cross-platform logging
+            if (window.propertyBridge) {
+                window.propertyBridge.log(msg);
+            }
+        }
+
+        // Check API key immediately
+        log(`🔑 API Key Check: ${window.LINZ_API_KEY ? 'LOADED (' + window.LINZ_API_KEY.length + ' chars)' : 'MISSING!'}`);
+
+        // Initialize map - will be repositioned when user location is found
+        const map = L.map('map').setView([0, 0], 2);
+
+        // Add OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Get user location and auto-load property boundary
+        let userLocation = null;
+        let userPropertyLayer = null;
+        let neighborLayers = [];
+        let allProperties = null;
+        
+        function getUserLocationAndLoadProperties() {
+            log('📍 Getting your location...');
+            
+            // Add watchdog timer in case geolocation hangs in WebView
+            const locationTimeout = setTimeout(() => {
+                log('⏰ Location timeout - using Wellington fallback');
+                userLocation = { lat: -41.2865, lng: 174.7762 };
+                map.setView([userLocation.lat, userLocation.lng], 15);
+                L.marker([userLocation.lat, userLocation.lng])
+                    .addTo(map)
+                    .bindPopup('📍 Wellington (Demo Location)')
+                    .openPopup();
+                setTimeout(() => {
+                    testLINZ();
+                }, 1000);
+            }, 8000); // 8 second watchdog
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        clearTimeout(locationTimeout); // Clear watchdog
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        log(`📍 Location found: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`);
+                        
+                        // Center map on user location
+                        map.setView([userLocation.lat, userLocation.lng], 17);
+                        
+                        // Add user location marker
+                        L.marker([userLocation.lat, userLocation.lng])
+                            .addTo(map)
+                            .bindPopup('📍 Your Location')
+                            .openPopup();
+                        
+                        // Auto-load properties around user location
+                        setTimeout(() => {
+                            testLINZ();
+                        }, 1000);
+                    },
+                    function(error) {
+                        clearTimeout(locationTimeout); // Clear watchdog
+                        log(`❌ Location error: ${error.message}`);
+                        log('🗺️ Using default Wellington location');
+                        
+                        // Fallback to Wellington
+                        userLocation = { lat: -41.2865, lng: 174.7762 };
+                        map.setView([userLocation.lat, userLocation.lng], 15);
+                        
+                        // Add Wellington location marker
+                        L.marker([userLocation.lat, userLocation.lng])
+                            .addTo(map)
+                            .bindPopup('📍 Wellington (Demo Location)')
+                            .openPopup();
+                        
+                        // Auto-load Wellington properties 
+                        setTimeout(() => {
+                            testLINZ();
+                        }, 1000);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                log('❌ Geolocation not supported');
+                log('🗺️ Using default Wellington location');
+                
+                userLocation = { lat: -41.2865, lng: 174.7762 };
+                map.setView([userLocation.lat, userLocation.lng], 15);
+                
+                // Add Wellington location marker
+                L.marker([userLocation.lat, userLocation.lng])
+                    .addTo(map)
+                    .bindPopup('📍 Wellington (Demo Location)')
+                    .openPopup();
+                
+                setTimeout(() => {
+                    testLINZ();
+                }, 1000);
+            }
+        }
+
+        // Test LINZ API function
+        async function testLINZ() {
+            if (!window.LINZ_API_KEY || window.LINZ_API_KEY === 'PUT_YOUR_LINZ_API_KEY_HERE') {
+                log('❌ No LINZ API key configured!');
+                return;
+            }
+
+            log('🧪 Testing LINZ API...');
+            
+            try {
+                // Get real LINZ property data for user's location
+                log('📡 Fetching LINZ property data for your location...');
+                
+                if (!userLocation) {
+                    log('❌ No location available');
+                    return;
+                }
+                
+                const userLat = userLocation.lat;
+                const userLng = userLocation.lng;
+                
+                // Create search area around user's location (small radius for precise property lookup)
+                const searchRadius = 0.0005; // About 50m radius for property search
+                const bbox = `${userLng - searchRadius},${userLat - searchRadius},${userLng + searchRadius},${userLat + searchRadius}`;
+                
+                // Use LINZ Primary Parcels layer for property boundaries with correct CRS
+                const srs = 'EPSG:4326';
+                const linzUrl = `https://data.linz.govt.nz/services;key=${window.LINZ_API_KEY}/wfs?` + 
+                               `service=WFS&version=2.0.0&request=GetFeature&` +
+                               `typeNames=data.linz.govt.nz:layer-50823&outputFormat=application/json&` +
+                               `srsName=${srs}&bbox=${bbox},${srs}&count=10`;
+                
+                log(`🔍 Searching for properties at ${userLat.toFixed(6)}, ${userLng.toFixed(6)}`);
+                
+                log(`🌐 Calling LINZ WFS: ${linzUrl.substring(0, 100)}...`);
+                const response = await fetch(linzUrl);
+                
+                log(`📊 LINZ Response: ${response.status} ${response.statusText}`);
+                
+                if (!response.ok) {
+                    log(`❌ LINZ API Error: ${response.status} ${response.statusText}`);
+                    
+                    // Try alternative layer if first fails
+                    const altUrl = `https://data.linz.govt.nz/services;key=${window.LINZ_API_KEY}/wfs?` + 
+                                  `service=WFS&version=2.0.0&request=GetFeature&` +
+                                  `typeNames=data.linz.govt.nz:layer-50772&outputFormat=application/json&` +
+                                  `srsName=${srs}&bbox=${bbox},${srs}&count=10`;
+                    
+                    log('🔄 Trying alternative LINZ layer...');
+                    const altResponse = await fetch(altUrl);
+                    
+                    if (!altResponse.ok) {
+                        log(`❌ Alternative LINZ API also failed: ${altResponse.status}`);
+                        return;
+                    }
+                    
+                    const altData = await altResponse.json();
+                    await processLinzData(altData);
+                    return;
+                }
+                
+                const data = await response.json();
+                await processLinzData(data);
+                
+            } catch (error) {
+                log(`❌ LINZ API EXCEPTION: ${error.message}`);
+            }
+        }
+        
+        // Process LINZ data and display property boundary
+        async function processLinzData(data) {
+            log(`🔍 Processing LINZ response...`);
+            log(`📋 Raw data keys: ${Object.keys(data)}`);
+            
+            if (!data.features || data.features.length === 0) {
+                log('❌ No properties found at your location in LINZ database');
+                log('📍 You may be in an area without cadastral property boundaries');
+                log(`🔍 Response type: ${data.type || 'unknown'}`);
+                if (data.totalFeatures !== undefined) {
+                    log(`📊 Total features in area: ${data.totalFeatures}`);
+                }
+                return;
+            }
+            
+            log(`✅ Found ${data.features.length} properties in LINZ data`);
+            log(`🎯 Sample feature properties: ${Object.keys(data.features[0].properties || {}).join(', ')}`);
+            
+            // Store all properties for neighbor functionality
+            allProperties = data.features;
+            
+            // Find the property that contains the user's location using point-in-polygon
+            let userPropertyFeature = null;
+            
+            for (const feature of data.features) {
+                if (feature.geometry && feature.geometry.coordinates) {
+                    // Check if user's location is inside this property
+                    if (isPointInPolygon(userLocation, feature.geometry)) {
+                        userPropertyFeature = feature;
+                        break;
+                    }
+                }
+            }
+            
+            if (!userPropertyFeature) {
+                // If no exact match, use the closest property
+                userPropertyFeature = data.features[0];
+                log('📍 Using closest property to your location');
+            } else {
+                log('🎯 Found property containing your exact location!');
+            }
+                
+            // Clear any existing property layers
+            if (userPropertyLayer) {
+                map.removeLayer(userPropertyLayer);
+            }
+            
+            // Create property boundary from LINZ data
+            const coords = getPolygonCoordinates(userPropertyFeature.geometry);
+            if (!coords || coords.length === 0) {
+                log('❌ Invalid geometry data from LINZ');
+                return;
+            }
+            
+            const latlngs = coords.map(coord => [coord[1], coord[0]]);
+            
+            userPropertyLayer = L.polygon(latlngs, {
+                color: '#007AFF',
+                weight: 3,
+                opacity: 0.9,
+                fillColor: '#007AFF',
+                fillOpacity: 0.3
+            }).addTo(map);
+            
+            // Extract property information from LINZ data
+            const props = userPropertyFeature.properties;
+            
+            // Property identification
+            const propertyId = props.id || 'Unknown';
+            
+            // Title reference information with fallbacks
+            const titleReferences = props.titles || props.title_no || props.title || props.title_ref || 'Not available';
+            
+            // Property name (appellation)
+            const appellation = props.appellation || 'Property name not available';
+            
+            // Additional property details
+            const landDistrict = props.land_district || 'Unknown';
+            const parcelIntent = props.parcel_intent || 'Unknown';
+            const calcArea = props.calc_area ? `${props.calc_area.toLocaleString()} m²` : 'Unknown';
+            
+            // Format title references for display
+            let titleDisplay = titleReferences;
+            if (Array.isArray(titleReferences)) {
+                titleDisplay = titleReferences.length > 3 
+                    ? `${titleReferences.slice(0, 3).join(', ')} (+${titleReferences.length - 3} more)`
+                    : titleReferences.join(', ');
+            } else if (typeof titleReferences === 'string' && titleReferences.includes(',')) {
+                const titles = titleReferences.split(',').map(t => t.trim());
+                titleDisplay = titles.length > 3 
+                    ? `${titles.slice(0, 3).join(', ')} (+${titles.length - 3} more)`
+                    : titles.join(', ');
+            }
+            
+            // Get property center point for reverse geocoding
+            const bounds = L.polygon(latlngs).getBounds();
+            const center = bounds.getCenter();
+            
+            // Get street address via reverse geocoding
+            let streetAddress = 'Loading address...';
+            getStreetAddress(center.lat, center.lng).then(address => {
+                // Update the popup with the real address
+                const updatedPopup = `
+                    <div style="min-width: 250px;">
+                        <strong>📍 Property Information</strong><br><br>
+                        
+                        <strong>🏠 Appellation:</strong><br>
+                        <span style="color: #007AFF;">${appellation}</span><br><br>
+                        
+                        <strong>📍 Address:</strong><br>
+                        <span style="color: #007AFF;">${address}</span><br><br>
+                        
+                        <strong>📋 Title Reference:</strong><br>
+                        <span style="color: #007AFF;">${titleDisplay}</span><br><br>
+                        
+                        <strong>🆔 Property ID:</strong> ${propertyId}<br>
+                        <strong>📏 Area:</strong> ${calcArea}<br>
+                        <strong>🗺️ Land District:</strong> ${landDistrict}<br>
+                        <strong>📝 Intent:</strong> ${parcelIntent}<br>
+                        
+                        <br><em style="color: #666;">Data from LINZ cadastral database</em>
+                    </div>
+                `;
+                userPropertyLayer.setPopupContent(updatedPopup);
+            }).catch(() => {
+                // Fallback if reverse geocoding fails
+                const fallbackPopup = `
+                    <div style="min-width: 250px;">
+                        <strong>📍 Property Information</strong><br><br>
+                        
+                        <strong>🏠 Appellation:</strong><br>
+                        <span style="color: #007AFF;">${appellation}</span><br><br>
+                        
+                        <strong>📍 Address:</strong><br>
+                        <span style="color: #666;">Address not available</span><br><br>
+                        
+                        <strong>📋 Title Reference:</strong><br>
+                        <span style="color: #007AFF;">${titleDisplay}</span><br><br>
+                        
+                        <strong>🆔 Property ID:</strong> ${propertyId}<br>
+                        <strong>📏 Area:</strong> ${calcArea}<br>
+                        <strong>🗺️ Land District:</strong> ${landDistrict}<br>
+                        <strong>📝 Intent:</strong> ${parcelIntent}<br>
+                        
+                        <br><em style="color: #666;">Data from LINZ cadastral database</em>
+                    </div>
+                `;
+                userPropertyLayer.setPopupContent(fallbackPopup);
+            });
+            
+            // Add initial popup (will be updated with address once geocoding completes)
+            userPropertyLayer.bindPopup(`
+                <div style="min-width: 250px;">
+                    <strong>📍 Property Information</strong><br><br>
+                    
+                    <strong>🏠 Appellation:</strong><br>
+                    <span style="color: #007AFF;">${appellation}</span><br><br>
+                    
+                    <strong>📍 Address:</strong><br>
+                    <span style="color: #666;">Loading address...</span><br><br>
+                    
+                    <strong>📋 Title Reference:</strong><br>
+                    <span style="color: #007AFF;">${titleDisplay}</span><br><br>
+                    
+                    <strong>🆔 Property ID:</strong> ${propertyId}<br>
+                    <strong>📏 Area:</strong> ${calcArea}<br>
+                    <strong>🗺️ Land District:</strong> ${landDistrict}<br>
+                    <strong>📝 Intent:</strong> ${parcelIntent}<br>
+                    
+                    <br><em style="color: #666;">Data from LINZ cadastral database</em>
+                </div>
+            `).openPopup();
+            
+            // Zoom to fit the actual property boundary
+            map.fitBounds(userPropertyLayer.getBounds(), {padding: [50, 50]});
+            
+            log(`✅ SUCCESS! Displaying real property boundary from LINZ data`);
+            
+            // Send property boundary data to native AR view via bridge
+            if (window.propertyBridge) {
+                window.propertyBridge.sendPropertyDataToAR({
+                    geometry: userPropertyFeature.geometry,
+                    property: userPropertyFeature.properties
+                });
+            }
+            
+            // Enable AR button now that we have property data
+            updateARButtonState(true);
+        }
+        
+        // Helper function to extract coordinates from different geometry types
+        function getPolygonCoordinates(geometry) {
+            if (geometry.type === 'Polygon') {
+                return geometry.coordinates[0];
+            } else if (geometry.type === 'MultiPolygon') {
+                return geometry.coordinates[0][0];
+            }
+            return null;
+        }
+        
+        // Simple point-in-polygon check
+        function isPointInPolygon(point, geometry) {
+            const coords = getPolygonCoordinates(geometry);
+            if (!coords) return false;
+            
+            const x = point.lng;
+            const y = point.lat;
+            let inside = false;
+            
+            for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
+                const xi = coords[i][0], yi = coords[i][1];
+                const xj = coords[j][0], yj = coords[j][1];
+                
+                if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+                    inside = !inside;
+                }
+            }
+            
+            return inside;
+        }
+        
+        // Reverse geocoding function to get street address
+        async function getStreetAddress(lat, lng) {
+            try {
+                // Try LocationIQ first (if available)
+                if (window.LOCATIONIQ_API_KEY && window.LOCATIONIQ_API_KEY.length > 10) {
+                    log(`🔍 Requesting address from LocationIQ for ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+                    const locationiqUrl = `https://us1.locationiq.com/v1/reverse.php?key=${window.LOCATIONIQ_API_KEY}&lat=${lat}&lon=${lng}&format=json`;
+                    const response = await fetch(locationiqUrl);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const address = data.display_name || 'Address not available';
+                        log(`✅ Address found: ${address}`);
+                        return address;
+                    } else {
+                        log(`❌ LocationIQ API error: ${response.status} ${response.statusText}`);
+                    }
+                } else {
+                    log(`⚠️ LocationIQ API key not available or too short`);
+                }
+                
+                // Fallback to Google Geocoding API if available
+                if (window.GOOGLE_API_KEY && window.GOOGLE_API_KEY !== 'AIzaSyAw4vQ2HO7S_hZ4U0-C0uPx7SBX88XJLVA') {
+                    const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${window.GOOGLE_API_KEY}`;
+                    const response = await fetch(googleUrl);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.results && data.results.length > 0) {
+                            return data.results[0].formatted_address || 'Address not available';
+                        }
+                    }
+                }
+                
+                throw new Error('Geocoding services not available');
+            } catch (error) {
+                console.warn('Reverse geocoding failed:', error);
+                throw error;
+            }
+        }
+
+        // Toggle neighbor properties display
+        function toggleNeighbors() {
+            const checkbox = document.getElementById('neighborsToggle');
+            log(`🔄 Toggle neighbors clicked: ${checkbox.checked}`);
+            
+            if (checkbox.checked) {
+                showNeighbors();
+            } else {
+                hideNeighbors();
+            }
+        }
+        
+        // Show neighboring properties
+        function showNeighbors() {
+            if (!allProperties || !userPropertyLayer) {
+                log('⚠️ No properties loaded yet');
+                log(`🔍 Debug: allProperties = ${!!allProperties}, userPropertyLayer = ${!!userPropertyLayer}`);
+                return;
+            }
+            
+            log('🏘️ Showing neighbor properties...');
+            log(`📊 Total properties available: ${allProperties.length}`);
+            
+            // Get the current user property feature
+            const userBounds = userPropertyLayer.getBounds();
+            const userProperty = getCurrentUserProperty();
+            log(`👤 User property found: ${!!userProperty}`);
+            let neighborsShown = 0;
+            
+            allProperties.forEach((feature, index) => {
+                // Skip the user's own property
+                const userProperty = getCurrentUserProperty();
+                log(`🔍 Processing property ${index}: ${feature.properties?.appellation || 'Unknown'}`);
+                
+                if (feature === userProperty) {
+                    log(`⏭️ Skipping user's own property ${index}`);
+                    return;
+                }
+                
+                // Create neighbor boundary
+                const coords = getPolygonCoordinates(feature.geometry);
+                if (coords && coords.length > 0) {
+                    log(`✅ Creating neighbor boundary for property ${index}`);
+                    const latlngs = coords.map(coord => [coord[1], coord[0]]);
+                    
+                    const neighborLayer = L.polygon(latlngs, {
+                        color: '#FF6B6B',
+                        weight: 2,
+                        opacity: 0.8,
+                        fillColor: '#FF6B6B',
+                        fillOpacity: 0.1,
+                        dashArray: '5, 5'
+                    }).addTo(map);
+                    
+                    // Add basic popup for neighbor
+                    const props = feature.properties;
+                    const appellation = props.appellation || 'Neighboring Property';
+                    const area = props.calc_area ? `${props.calc_area.toLocaleString()} m²` : 'Unknown';
+                    
+                    neighborLayer.bindPopup(`
+                        <div style="min-width: 200px;">
+                            <strong>🏘️ Neighbor Property</strong><br><br>
+                            <strong>🏠 Name:</strong> ${appellation}<br>
+                            <strong>📏 Area:</strong> ${area}<br>
+                            <strong>🆔 ID:</strong> ${props.id || 'Unknown'}
+                        </div>
+                    `);
+                    
+                    neighborLayers.push(neighborLayer);
+                    neighborsShown++;
+                }
+            });
+            
+            log(`✅ Showing ${neighborsShown} neighbor properties`);
+        }
+        
+        // Hide neighboring properties
+        function hideNeighbors() {
+            log('🏘️ Hiding neighbor properties...');
+            
+            neighborLayers.forEach(layer => {
+                map.removeLayer(layer);
+            });
+            neighborLayers = [];
+            
+            log('✅ Neighbor properties hidden');
+        }
+        
+        // Get current user property feature
+        function getCurrentUserProperty() {
+            if (!allProperties || !userLocation) return null;
+            
+            for (const feature of allProperties) {
+                if (feature.geometry && feature.geometry.coordinates) {
+                    if (isPointInPolygon(userLocation, feature.geometry)) {
+                        return feature;
+                    }
+                }
+            }
+            return allProperties[0]; // fallback to first property
+        }
+
+
+        // Function to open AR view on native platforms
+        function openARView() {
+            log('🥽 Opening AR view...');
+            
+            if (window.propertyBridge) {
+                // Use cross-platform bridge API
+                if (window.propertyBridge.platform === 'ios') {
+                    // Send message to iOS to switch to AR tab
+                    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.openAR) {
+                        window.webkit.messageHandlers.openAR.postMessage('');
+                    }
+                } else if (window.propertyBridge.platform === 'android') {
+                    // Send message to Android to switch to AR tab
+                    if (window.Android && window.Android.openARView) {
+                        window.Android.openARView();
+                    }
+                }
+            } else {
+                // Fallback for web platform
+                alert('AR functionality requires the mobile app. Please download the PropertyMapApp for iOS or Android.');
+            }
+        }
+        
+        // Function to enable/disable AR button based on property data availability
+        function updateARButtonState(hasPropertyData) {
+            const arButton = document.getElementById('arButton');
+            if (arButton) {
+                arButton.disabled = !hasPropertyData;
+                if (hasPropertyData) {
+                    arButton.textContent = '🥽 View in AR';
+                } else {
+                    arButton.textContent = '🥽 Find Property First';
+                }
+            }
+        }
+        
+        // Function to send property data to iOS AR view
+        function sendPropertyDataToAR(geometry, property) {
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.propertyData) {
+                const coordinates = [];
+                
+                // Extract coordinates from property boundary geometry
+                if (geometry && geometry.coordinates && geometry.coordinates[0]) {
+                    for (const coord of geometry.coordinates[0]) {
+                        coordinates.push({
+                            latitude: coord[1],
+                            longitude: coord[0]
+                        });
+                    }
+                }
+                
+                const propertyData = {
+                    coordinates: coordinates,
+                    property: {
+                        id: property.id,
+                        appellation: property.appellation,
+                        address: property.address || '',
+                        area: property.calc_area || 0,
+                        landDistrict: property.land_district || ''
+                    }
+                };
+                
+                window.webkit.messageHandlers.propertyData.postMessage(propertyData);
+                log('🚀 Property data sent to AR view: ' + coordinates.length + ' coordinates');
+            }
+        }
+
+        // Auto-start location detection and property loading
+        setTimeout(() => {
+            log('🚀 PropertyMapApp starting...');
+            getUserLocationAndLoadProperties();
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+PropertyView-Enhanced
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/ParcelARViewManager.swift
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/ParcelARViewManager.swift:49:40 'sceneView' is inaccessible due to 'private' protection level
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/ParcelARViewManager.swift:50:46 Reference to member 'horizontal' cannot be resolved without a contextual type
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/ParcelARViewManager.swift:50:59 Reference to member 'vertical' cannot be resolved without a contextual type
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/ParcelARViewManager.swift:51:21 'sceneView' is inaccessible due to 'private' protection level
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][60x60][][][2x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 120x120.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][40x40][][][3x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 120x120.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][40x40][][][2x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 80x80.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][20x20][][][3x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 60x60.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][29x29][][][2x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 58x58.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][29x29][][][3x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 87x87.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][60x60][][][3x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 180x180.
+
+/Users/brendonhogg/Desktop/FINAL_ENHANCED_DOWNLOAD/PropertyView-Enhanced/Assets.xcassets:./AppIcon.appiconset/[][iphone][20x20][][][2x][][][][] AppIcon.appiconset/B+AR.png is 1024x1024 but should be 40x40.

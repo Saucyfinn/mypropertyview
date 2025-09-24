@@ -1,0 +1,355 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D92E3C32C11C8B400A1B2E7 /* PropertyViewEnhancedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D92E3C22C11C8B400A1B2E7 /* PropertyViewEnhancedApp.swift */; };
+		1D92E3C52C11C8B400A1B2E7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D92E3C42C11C8B400A1B2E7 /* ContentView.swift */; };
+		1D92E3D12C11C92200A1B2E7 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D92E3D02C11C92200A1B2E7 /* AppState.swift */; };
+		1D92E3D32C11C93500A1B2E7 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D92E3D22C11C93500A1B2E7 /* LocationModel.swift */; };
+		1D92E3D52C11C94800A1B2E7 /* MapTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D92E3D42C11C94800A1B2E7 /* MapTab.swift */; };
+		1D92E3D72C11C95B00A1B2E7 /* ARTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D92E3D62C11C95B00A1B2E7 /* ARTab.swift */; };
+		1D92E3D92C11C98200A1B2E7 /* Web in Resources */ = {isa = PBXBuildFile; fileRef = 1D92E3D82C11C98200A1B2E7 /* Web */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D92E3BF2C11C8B400A1B2E7 /* PropertyView-Enhanced.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PropertyView-Enhanced.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D92E3C22C11C8B400A1B2E7 /* PropertyViewEnhancedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyViewEnhancedApp.swift; sourceTree = "<group>"; };
+		1D92E3C42C11C8B400A1B2E7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1D92E3CB2C11C8B600A1B2E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1D92E3D02C11C92200A1B2E7 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		1D92E3D22C11C93500A1B2E7 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
+		1D92E3D42C11C94800A1B2E7 /* MapTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTab.swift; sourceTree = "<group>"; };
+		1D92E3D62C11C95B00A1B2E7 /* ARTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARTab.swift; sourceTree = "<group>"; };
+		1D92E3D82C11C98200A1B2E7 /* Web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Web; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D92E3BC2C11C8B400A1B2E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1D92E3B62C11C8B400A1B2E7 = {
+			isa = PBXGroup;
+			children = (
+				1D92E3C12C11C8B400A1B2E7 /* PropertyView-Enhanced */,
+				1D92E3C02C11C8B400A1B2E7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1D92E3C02C11C8B400A1B2E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D92E3BF2C11C8B400A1B2E7 /* PropertyView-Enhanced.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1D92E3C12C11C8B400A1B2E7 /* PropertyView-Enhanced */ = {
+			isa = PBXGroup;
+			children = (
+				1D92E3C22C11C8B400A1B2E7 /* PropertyViewEnhancedApp.swift */,
+				1D92E3C42C11C8B400A1B2E7 /* ContentView.swift */,
+				1D92E3D02C11C92200A1B2E7 /* AppState.swift */,
+				1D92E3D22C11C93500A1B2E7 /* LocationModel.swift */,
+				1D92E3D42C11C94800A1B2E7 /* MapTab.swift */,
+				1D92E3D62C11C95B00A1B2E7 /* ARTab.swift */,
+				1D92E3D82C11C98200A1B2E7 /* Web */,
+				1D92E3CB2C11C8B600A1B2E7 /* Info.plist */,
+			);
+			path = PropertyView-Enhanced;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D92E3BE2C11C8B400A1B2E7 /* PropertyView-Enhanced */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D92E3CE2C11C8B600A1B2E7 /* Build configuration list for PBXNativeTarget "PropertyView-Enhanced" */;
+			buildPhases = (
+				1D92E3BB2C11C8B400A1B2E7 /* Sources */,
+				1D92E3BC2C11C8B400A1B2E7 /* Frameworks */,
+				1D92E3BD2C11C8B400A1B2E7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PropertyView-Enhanced";
+			productName = "PropertyView-Enhanced";
+			productReference = 1D92E3BF2C11C8B400A1B2E7 /* PropertyView-Enhanced.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1D92E3B72C11C8B400A1B2E7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					1D92E3BE2C11C8B400A1B2E7 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 1D92E3BA2C11C8B400A1B2E7 /* Build configuration list for PBXProject "PropertyView-Enhanced" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1D92E3B62C11C8B400A1B2E7;
+			productRefGroup = 1D92E3C02C11C8B400A1B2E7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D92E3BE2C11C8B400A1B2E7 /* PropertyView-Enhanced */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D92E3BD2C11C8B400A1B2E7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D92E3D92C11C98200A1B2E7 /* Web in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D92E3BB2C11C8B400A1B2E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D92E3D12C11C92200A1B2E7 /* AppState.swift in Sources */,
+				1D92E3D52C11C94800A1B2E7 /* MapTab.swift in Sources */,
+				1D92E3C52C11C8B400A1B2E7 /* ContentView.swift in Sources */,
+				1D92E3D72C11C95B00A1B2E7 /* ARTab.swift in Sources */,
+				1D92E3D32C11C93500A1B2E7 /* LocationModel.swift in Sources */,
+				1D92E3C32C11C8B400A1B2E7 /* PropertyViewEnhancedApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D92E3CC2C11C8B600A1B2E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1D92E3CD2C11C8B600A1B2E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1D92E3CF2C11C8B600A1B2E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = PropertyView-Enhanced/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "PropertyView Enhanced uses the camera for AR visualization of property boundaries in real-world view.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PropertyView Enhanced needs your location to find and display accurate property boundaries around you.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.PropertyView-Enhanced";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1D92E3D02C11C8B600A1B2E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = PropertyView-Enhanced/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "PropertyView Enhanced uses the camera for AR visualization of property boundaries in real-world view.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PropertyView Enhanced needs your location to find and display accurate property boundaries around you.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.PropertyView-Enhanced";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D92E3BA2C11C8B400A1B2E7 /* Build configuration list for PBXProject "PropertyView-Enhanced" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D92E3CC2C11C8B600A1B2E7 /* Debug */,
+				1D92E3CD2C11C8B600A1B2E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D92E3CE2C11C8B600A1B2E7 /* Build configuration list for PBXNativeTarget "PropertyView-Enhanced" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D92E3CF2C11C8B600A1B2E7 /* Debug */,
+				1D92E3D02C11C8B600A1B2E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1D92E3B72C11C8B400A1B2E7 /* Project object */;
+}

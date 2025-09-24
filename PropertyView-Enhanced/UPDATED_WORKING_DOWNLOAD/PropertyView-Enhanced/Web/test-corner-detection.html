@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Corner Detection Test</title>
+    <script src="coordinate-processor.js"></script>
+</head>
+<body>
+    <h1>Corner Detection Algorithm Test</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        function runCornerDetectionTests() {
+            const results = document.getElementById('test-results');
+            
+            // Test 1: Simple rectangular property
+            const rectangularProperty = [
+                { latitude: -36.8485, longitude: 174.7633 },
+                { latitude: -36.8485, longitude: 174.7635 },
+                { latitude: -36.8487, longitude: 174.7635 },
+                { latitude: -36.8487, longitude: 174.7633 },
+                { latitude: -36.8485, longitude: 174.7633 } // closed polygon
+            ];
+            
+            // Test 2: Complex property with many boundary points
+            const complexProperty = [
+                { latitude: -36.8485, longitude: 174.7633 },
+                { latitude: -36.8485, longitude: 174.7634 },
+                { latitude: -36.8485, longitude: 174.7635 },
+                { latitude: -36.8486, longitude: 174.7635 },
+                { latitude: -36.8487, longitude: 174.7635 },
+                { latitude: -36.8487, longitude: 174.7634 },
+                { latitude: -36.8487, longitude: 174.7633 },
+                { latitude: -36.8486, longitude: 174.7633 }
+            ];
+            
+            try {
+                const processor = new CoordinateProcessor('test-api-key');
+                
+                // Test rectangular property
+                console.log('Testing rectangular property corner detection...');
+                const rectangularCorners = processor.selectKeyCorners(rectangularProperty);
+                
+                // Test complex property  
+                console.log('Testing complex property corner detection...');
+                const complexCorners = processor.selectKeyCorners(complexProperty);
+                
+                results.innerHTML = `
+                    <h2>Test Results</h2>
+                    <h3>Rectangular Property (${rectangularProperty.length} points):</h3>
+                    <p>Selected ${rectangularCorners.length} corners:</p>
+                    <ul>
+                        ${rectangularCorners.map((corner, i) => 
+                            `<li>Corner ${i+1}: ${corner.latitude.toFixed(6)}, ${corner.longitude.toFixed(6)}</li>`
+                        ).join('')}
+                    </ul>
+                    
+                    <h3>Complex Property (${complexProperty.length} points):</h3>
+                    <p>Selected ${complexCorners.length} corners:</p>
+                    <ul>
+                        ${complexCorners.map((corner, i) => 
+                            `<li>Corner ${i+1}: ${corner.latitude.toFixed(6)}, ${corner.longitude.toFixed(6)}</li>`
+                        ).join('')}
+                    </ul>
+                    
+                    <h3>Algorithm Validation:</h3>
+                    <ul>
+                        <li>✅ Corner detection algorithm loaded successfully</li>
+                        <li>✅ Handles rectangular properties: ${rectangularCorners.length >= 2 && rectangularCorners.length <= 4 ? 'PASS' : 'FAIL'}</li>
+                        <li>✅ Handles complex properties: ${complexCorners.length >= 2 && complexCorners.length <= 4 ? 'PASS' : 'FAIL'}</li>
+                        <li>✅ Returns coordinates in correct format: ${rectangularCorners.every(c => c.latitude && c.longitude) ? 'PASS' : 'FAIL'}</li>
+                    </ul>
+                `;
+                
+                console.log('Corner detection tests completed successfully!');
+                
+            } catch (error) {
+                results.innerHTML = `
+                    <h2>Test Error</h2>
+                    <p style="color: red;">Error: ${error.message}</p>
+                    <p>Check console for details.</p>
+                `;
+                console.error('Corner detection test failed:', error);
+            }
+        }
+        
+        // Run tests when page loads
+        window.addEventListener('load', runCornerDetectionTests);
+    </script>
+</body>
+</html>

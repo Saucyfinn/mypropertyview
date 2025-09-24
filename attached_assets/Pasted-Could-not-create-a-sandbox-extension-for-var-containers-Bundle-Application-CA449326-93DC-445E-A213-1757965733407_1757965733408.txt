@@ -1,0 +1,449 @@
+Could not create a sandbox extension for '/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'
+App is being debugged, do not track this hang
+Hang detected: 1.19s (debugger attached, not reporting)
+Could not create a sandbox extension for '/'
+App is being debugged, do not track this hang
+Hang detected: 1.16s (debugger attached, not reporting)
+App is being debugged, do not track this hang
+Hang detected: 0.40s (debugger attached, not reporting)
+App is being debugged, do not track this hang
+Hang detected: 0.25s (debugger attached, not reporting)
+App is being debugged, do not track this hang
+Hang detected: 0.43s (debugger attached, not reporting)
+App is being debugged, do not track this hang
+Hang detected: 0.34s (debugger attached, not reporting)
+✅ Using automated corners: 4 points from LINZ data
+Could not locate file 'default-binaryarchive.metallib' in bundle.
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+Video texture allocator is not initialized.
+[VideoLightSpillGenerator] [VideoLightSpillMPSCallsPrewarm] Failed to create input texture
+Registering library (/System/Library/PrivateFrameworks/CoreRE.framework/default.metallib) that already exists in shader manager. Library will be overwritten.
+generateMipmaps 32ms p=70 sc=1 w=122 h=100 d=1 ar=1 t=2
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/suFeatheringCreateMergedOcclusionMask.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arKitPassthrough.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arSegmentationComposite.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute0.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute1.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute2.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute3.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute4.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute5.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute6.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute7.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute8.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute9.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute10.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute11.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute12.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute13.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute14.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute15.rematerial' in bundle at '/private/var/containers/Bundle/Application/CA449326-93DC-445E-A213-37798BDE4A94/PropertyView-Enhanced.app'. Loading via asset path.
+📍 Loading coordinates into AR...
+Publishing changes from within view updates is not allowed, this will cause undefined behavior.
+🗺️ Converting GPS to AR coordinates with origin: -43.7138556241, 172.5842545333
+✅ GPS to AR conversion complete - coordinates now in meters relative to origin
+🎨 Rendering property boundaries in AR...
+✅ Property boundaries rendered successfully
+🔄 Starting AR session setup...
+🔧 Setting up AR session...
+📍 Loading AR coordinates: 4 points
+📍 Loading coordinates into AR...
+🗺️ Converting GPS to AR coordinates with origin: -43.7138556241, 172.5842545333
+✅ GPS to AR conversion complete - coordinates now in meters relative to origin
+🎨 Rendering property boundaries in AR...
+✅ Property boundaries rendered successfully
+App is being debugged, do not track this hang
+Hang detected: 2.65s (debugger attached, not reporting)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+Found no parameter definition for shader constant 'RenderToCompositeLayer::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVRROnCapableDevice::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnablePtCrossing::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'DitherMode::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'RenderToCompositeLayer::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVRROnCapableDevice::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnablePtCrossing::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'DitherMode::runtimeFunctionConstants'
+Attempting to enable an already-enabled session. Ignoring...
+Attempting to enable an already-enabled session. Ignoring...
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+warning: using linearization / solving fallback.
+✅ AR session setup successful
+Skipping integration due to poor slam at time: 38299.763278 vio_initialized(0) map_size(0) tracking_state_is_nominal(0) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38299.963279 vio_initialized(0) map_size(0) tracking_state_is_nominal(0) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38300.163280 vio_initialized(0) map_size(0) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38300.363281 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38300.563281 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38300.763282 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38300.963283 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38301.163284 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38301.363285 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38301.563286 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38301.763286 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38301.963287 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38302.163288 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 38302.363289 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+App is being debugged, do not track this hang
+Hang detected: 0.52s (debugger attached, not reporting)
+Found no parameter definition for shader constant 'RenderToCompositeLayer::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableAREnvProbe::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableDynamicLighting::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'SupportsPrefilteredProbes::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVRROnCapableDevice::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnablePtCrossing::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'RenderForBlur::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableBaseColorMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableNormalMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableEmissiveMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableRoughnessMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableMetallicMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableAOMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableSpecularMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableOpacityMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableClearcoat::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableTransparency::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'UseBaseColorMapAsTintMask::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableOpacityThreshold::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableMultiUVs::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVertexColor::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'VertexColorOption::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableGlow::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableShadowedDynamicLight::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'DitherMode::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'PerceptualBlendingMode::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVirtualEnvironmentProbes::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableClearcoatNormalMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableIBLRotation::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableIBLBlending::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableShaderGraphLightSpill::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'RenderToCompositeLayer::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableAREnvProbe::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableDynamicLighting::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'SupportsPrefilteredProbes::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVRROnCapableDevice::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnablePtCrossing::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'RenderForBlur::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableBaseColorMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableNormalMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableEmissiveMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableRoughnessMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableMetallicMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableAOMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableSpecularMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableOpacityMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableClearcoat::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableTransparency::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'UseBaseColorMapAsTintMask::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableOpacityThreshold::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableMultiUVs::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVertexColor::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'VertexColorOption::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableGlow::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableShadowedDynamicLight::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'DitherMode::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'PerceptualBlendingMode::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVirtualEnvironmentProbes::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableClearcoatNormalMap::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableIBLRotation::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableIBLBlending::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableShaderGraphLightSpill::runtimeFunctionConstants'
+✅ Using automated corners: 4 points from LINZ data
+🔄 Starting AR session setup...
+🔧 Setting up AR session...
+📍 Loading AR coordinates: 4 points
+📍 Loading coordinates into AR...
+🗺️ Converting GPS to AR coordinates with origin: -43.7138556241, 172.5842545333
+✅ GPS to AR conversion complete - coordinates now in meters relative to origin
+🎨 Rendering property boundaries in AR...
+✅ Property boundaries rendered successfully
+Attempting to enable an already-enabled session. Ignoring...
+MeshShadowBuilder: In generate data, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Found no parameter definition for shader constant 'RenderToCompositeLayer::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVRROnCapableDevice::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnablePtCrossing::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'DitherMode::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'RenderToCompositeLayer::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnableVRROnCapableDevice::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'EnablePtCrossing::runtimeFunctionConstants'
+Found no parameter definition for shader constant 'DitherMode::runtimeFunctionConstants'
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+✅ AR session setup successful
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38335.215072 vio_initialized(0) map_size(0) tracking_state_is_nominal(0) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38335.415073 vio_initialized(0) map_size(0) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38335.615073 vio_initialized(0) map_size(0) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38335.815074 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38336.015074 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38336.215075 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38336.415076 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38336.615076 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38336.815077 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38337.015077 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+Skipping integration due to poor slam at time: 38337.215078 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists
+MeshShadowBuilder: In render data generation, world 0 has no receivers but the world still exists

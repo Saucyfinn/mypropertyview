@@ -6,15 +6,14 @@ The application provides features for viewing property parcels, displaying neigh
 
 # Recent Changes
 
-**September 2025 - Application Fixes and Enhancements**
-- Fixed critical Swift syntax errors in ARTab.swift that prevented iOS app compilation
-- Enhanced web application with neighbor boundaries toggle functionality (red dashed lines)
-- Added satellite view toggle button in the control panel
-- Implemented AR view button at bottom of screen for augmented reality access
-- Improved property boundary visualization with distinct styling for subject (blue solid) and neighbor properties (red dashed)
-- Updated user interface with better organized control panel including view options and status display
-- Configured development server workflow for local testing and development
-- **Enhanced Multi-Tier ARKit Fallback System** - Implemented comprehensive fallback positioning methods to ensure property boundaries can always be displayed in AR regardless of GPS availability or location coverage
+**September 2025 - Comprehensive App Enhancement & Performance Optimization**
+- **Added App Loading Screen** - Implemented beautiful loading screen with progress indicator to show app initialization status during slow startup, providing clear feedback to users about app loading progress
+- **Enhanced Neighbor Boundary Visibility** - Dramatically improved neighbor property boundaries with clearer red dashed lines, increased opacity and weight for much better visibility on the map interface
+- **Fixed Property Information Display** - Resolved appellation and address not showing by implementing proper property data extraction and display functionality from LINZ data properties
+- **Improved UI Layout** - Fixed bottom info panel being obscured by adjusting spacing and positioning to prevent overlap with control buttons, enhanced readability with better styling
+- **Removed Duplicate AR Button** - Cleaned up interface by removing redundant AR button from map overlay, keeping only the main tab navigation for cleaner user experience
+- **Enhanced AR Visualization** - Transformed AR parcel display from simple rectangle to full property polygons with enhanced translucent infill, improved material properties for better real-world visibility
+- **Implemented AR Fallback Positioning** - Added comprehensive multi-tier positioning system including GPS timeout handling, plane detection fallback for indoor use, and Wellington coordinate fallback with enhanced AR session management
 
 **September 2025 - Multi-Tier ARKit Fallback System**
 - **PlaneDetectionFallbackManager** - Uses ARKit plane detection to anchor boundaries to detected surfaces, perfect for indoor environments

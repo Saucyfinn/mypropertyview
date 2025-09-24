@@ -1,0 +1,93 @@
+Could not create a sandbox extension for '/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'
+App is being debugged, do not track this hang
+Hang detected: 0.72s (debugger attached, not reporting)
+Could not create a sandbox extension for '/'
+App is being debugged, do not track this hang
+Hang detected: 0.29s (debugger attached, not reporting)
+App is being debugged, do not track this hang
+Hang detected: 0.41s (debugger attached, not reporting)
+Could not locate file 'default-binaryarchive.metallib' in bundle.
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+Video texture allocator is not initialized.
+[VideoLightSpillGenerator] [VideoLightSpillMPSCallsPrewarm] Failed to create input texture
+Registering library (/System/Library/PrivateFrameworks/CoreRE.framework/default.metallib) that already exists in shader manager. Library will be overwritten.
+generateMipmaps 39ms p=70 sc=1 w=122 h=100 d=1 ar=1 t=2
+generateMipmaps 14ms p=70 sc=1 w=1024 h=1024 d=1 ar=1 t=2
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/suFeatheringCreateMergedOcclusionMask.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arKitPassthrough.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arSegmentationComposite.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute0.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute1.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute2.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute3.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute4.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute5.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute6.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute7.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute8.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute9.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute10.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute11.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute12.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute13.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute14.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute15.rematerial' in bundle at '/private/var/containers/Bundle/Application/A67FF95C-5181-4696-AB2A-B6DEC62F0E70/PropertyView-Enhanced.app'. Loading via asset path.
+🔄 Starting AR session setup...
+🔧 Setting up AR session with GPS georeferencing...
+🧭 Compass alignment enabled: AR X/Z axes aligned to true east/north
+⚠️ No coordinates available for AR
+🎧 AR force update listener established
+<0x102e0d680> Gesture: System gesture gate timed out.
+App is being debugged, do not track this hang
+Hang detected: 2.45s (debugger attached, not reporting)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+Attempting to enable an already-enabled session. Ignoring...
+Attempting to enable an already-enabled session. Ignoring...
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+✅ AR session setup successful
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+warning: using linearization / solving fallback.
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Skipping integration due to poor slam at time: 6115.205189 vio_initialized(0) map_size(0) tracking_state_is_nominal(0) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6115.405190 vio_initialized(0) map_size(0) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6115.605191 vio_initialized(0) map_size(0) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6115.805192 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6116.005193 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6116.205194 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6116.405195 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6116.605195 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6116.805196 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6117.005197 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6117.205198 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6117.405198 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6117.605199 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+Skipping integration due to poor slam at time: 6117.805200 vio_initialized(0) map_size(1) tracking_state_is_nominal(1) is_3dof(0) reinitialize_attempts(0) slam_mode(RegularSLAM)
+<0x102e0d540> Touch: System gesture gate timed out.
+<0x102e0d680> Gesture: System gesture gate timed out.

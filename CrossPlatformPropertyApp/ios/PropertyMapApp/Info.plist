@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>CFBundleDevelopmentRegion</key>
+        <string>$(DEVELOPMENT_LANGUAGE)</string>
+        <key>CFBundleExecutable</key>
+        <string>$(EXECUTABLE_NAME)</string>
+        <key>CFBundleIdentifier</key>
+        <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundleName</key>
+        <string>$(PRODUCT_NAME)</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>1.0</string>
+        <key>CFBundleVersion</key>
+        <string>1</string>
+        <key>LINZ_API_KEY</key>
+        <string>PUT_YOUR_LINZ_API_KEY_HERE</string>
+        <key>LOCATIONIQ_API_KEY</key>
+        <string>PUT_YOUR_LOCATIONIQ_API_KEY_HERE</string>
+        <key>GOOGLE_API_KEY</key>
+        <string>PUT_YOUR_GOOGLE_API_KEY_HERE</string>
+        <key>LSRequiresIPhoneOS</key>
+        <true/>
+        <key>NSCameraUsageDescription</key>
+        <string>PropertyMapApp uses the camera for AR visualization of property boundaries.</string>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>PropertyMapApp needs your location to find and display accurate property boundaries around you.</string>
+        <key>UIApplicationSceneManifest</key>
+        <dict>
+                <key>UIApplicationSupportsMultipleScenes</key>
+                <true/>
+        </dict>
+        <key>UIApplicationSupportsIndirectInputEvents</key>
+        <true/>
+        <key>UILaunchScreen</key>
+        <dict/>
+        <key>UISupportedInterfaceOrientations</key>
+        <array>
+                <string>UIInterfaceOrientationPortrait</string>
+                <string>UIInterfaceOrientationLandscapeLeft</string>
+                <string>UIInterfaceOrientationLandscapeRight</string>
+        </array>
+        <key>UISupportedInterfaceOrientations~ipad</key>
+        <array>
+                <string>UIInterfaceOrientationPortrait</string>
+                <string>UIInterfaceOrientationPortraitUpsideDown</string>
+                <string>UIInterfaceOrientationLandscapeLeft</string>
+                <string>UIInterfaceOrientationLandscapeRight</string>
+        </array>
+</dict>
+</plist>

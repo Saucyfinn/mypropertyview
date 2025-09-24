@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PropertyView Debug</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
+        #map { height: 80%; width: 100%; }
+        #debug { height: 20%; background: #f0f0f0; padding: 10px; overflow-y: auto; font-size: 12px; }
+        .log { margin: 2px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="debug">
+        <div class="log">Debug console:</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const debug = document.getElementById('debug');
+            const div = document.createElement('div');
+            div.className = 'log ' + type;
+            div.textContent = new Date().toISOString() + ': ' + message;
+            debug.appendChild(div);
+            console.log(message);
+        }
+
+        // Test script
+        window.addEventListener('load', function() {
+            log('Page loaded');
+            
+            // Check if Leaflet is available
+            if (typeof L === 'undefined') {
+                log('ERROR: Leaflet library not loaded!', 'error');
+                return;
+            } else {
+                log('Leaflet library loaded successfully', 'success');
+            }
+
+            // Check if map container exists
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) {
+                log('ERROR: Map container not found!', 'error');
+                return;
+            } else {
+                log('Map container found', 'success');
+            }
+
+            // Try to initialize map
+            try {
+                const map = L.map('map').setView([-41.2865, 174.7762], 13);
+                log('Map object created successfully', 'success');
+
+                // Add a tile layer
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                log('Tile layer added successfully', 'success');
+
+                // Add a test marker
+                const marker = L.marker([-41.2865, 174.7762]).addTo(map);
+                marker.bindPopup('Test marker - Wellington, NZ');
+                log('Test marker added successfully', 'success');
+
+            } catch (error) {
+                log('ERROR initializing map: ' + error.message, 'error');
+            }
+        });
+
+        // Error handler
+        window.addEventListener('error', function(e) {
+            log('JavaScript Error: ' + e.error.message + ' at ' + e.filename + ':' + e.lineno, 'error');
+        });
+    </script>
+</body>
+</html>

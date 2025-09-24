@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Property Boundary Data Schema",
+  "description": "Standardized schema for property boundary data exchange between web and native AR viewers",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version for compatibility checking",
+      "example": "1.0"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when data was generated"
+    },
+    "coordinates": {
+      "type": "array",
+      "description": "Array of coordinate points defining the property boundary",
+      "items": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude in decimal degrees (WGS84)"
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude in decimal degrees (WGS84)"
+          }
+        },
+        "required": ["latitude", "longitude"],
+        "additionalProperties": false
+      },
+      "minItems": 3,
+      "description": "Minimum 3 points required for a polygon"
+    },
+    "property": {
+      "type": "object",
+      "description": "Property metadata and information",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique property identifier from source system"
+        },
+        "appellation": {
+          "type": "string",
+          "description": "Property name or legal description"
+        },
+        "address": {
+          "type": "string",
+          "description": "Street address or location description"
+        },
+        "area": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Property area in square meters"
+        },
+        "landDistrict": {
+          "type": "string",
+          "description": "Land district or administrative region"
+        },
+        "region": {
+          "type": "string",
+          "description": "Geographic region"
+        },
+        "territorialAuthority": {
+          "type": "string",
+          "description": "Local government or territorial authority"
+        }
+      },
+      "required": ["id"],
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Technical metadata about the data",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Data source identifier",
+          "example": "LINZ"
+        },
+        "coordinateSystem": {
+          "type": "string",
+          "description": "Spatial reference system",
+          "example": "EPSG:4326"
+        },
+        "units": {
+          "type": "string",
+          "description": "Coordinate units",
+          "example": "degrees"
+        }
+      },
+      "required": ["source", "coordinateSystem", "units"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["version", "timestamp", "coordinates", "property", "metadata"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "version": "1.0",
+      "timestamp": "2025-09-23T20:52:00.000Z",
+      "coordinates": [
+        {"latitude": -41.2865, "longitude": 174.7762},
+        {"latitude": -41.2866, "longitude": 174.7763},
+        {"latitude": -41.2867, "longitude": 174.7761},
+        {"latitude": -41.2865, "longitude": 174.7762}
+      ],
+      "property": {
+        "id": "12345",
+        "appellation": "Lot 1 DP 12345",
+        "address": "123 Example Street, Wellington",
+        "area": 800,
+        "landDistrict": "Wellington",
+        "region": "Wellington",
+        "territorialAuthority": "Wellington City Council"
+      },
+      "metadata": {
+        "source": "LINZ",
+        "coordinateSystem": "EPSG:4326",
+        "units": "degrees"
+      }
+    }
+  ]
+}

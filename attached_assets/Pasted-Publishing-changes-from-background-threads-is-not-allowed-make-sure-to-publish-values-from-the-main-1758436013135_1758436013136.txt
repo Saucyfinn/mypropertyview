@@ -1,0 +1,62 @@
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+App is being debugged, do not track this hang
+Hang detected: 0.66s (debugger attached, not reporting)
+Could not create a sandbox extension for '/var/containers/Bundle/Application/589AB3E4-CEFF-4FF4-BA75-D8C1D5E24507/PropertyView-Enhanced.app'
+App is being debugged, do not track this hang
+Hang detected: 0.33s (debugger attached, not reporting)
+ARSCNView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+App is being debugged, do not track this hang
+Hang detected: 0.33s (debugger attached, not reporting)
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+ARGeoTrackingConfiguration <0x1f2400b28>: Geo tracking is not available at coordinate: -43.713959, 172.582182
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:275) - (err=-12784)
+<<<< FigCaptureSourceRemote >>>> Fig assert: "err == 0 " at bail (FigCaptureSourceRemote.m:511) - (err=-12784)
+ARWorldTrackingTechnique <0x118d01c00>: World tracking performance is being affected by resource constraints [25]
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+Error: Found more than 3 echos. this is not supported and may indicate incorrect point cloud format
+bad point cloud format
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+warning: using linearization / solving fallback.
+App is being debugged, do not track this hang
+Hang detected: 12.80s (debugger attached, not reporting)
+Failed to request default share mode for fileURL:file:///private/var/mobile/Containers/Data/Application/48F6D679-DF48-44A9-89B0-6B7B93A75AA9/tmp/parcel.kml error:Error Domain=NSOSStatusErrorDomain Code=-10814 "(null)" UserInfo={_LSLine=1796, _LSFunction=runEvaluator}
+Only support loading options for CKShare and SWY types.
+error fetching item for URL:file:///private/var/mobile/Containers/Data/Application/48F6D679-DF48-44A9-89B0-6B7B93A75AA9/tmp/parcel.kml : (null)
+error fetching file provider domain for URL:file:///private/var/mobile/Containers/Data/Application/48F6D679-DF48-44A9-89B0-6B7B93A75AA9/tmp/parcel.kml : (null)
+error fetching item for URL:file:///private/var/mobile/Containers/Data/Application/48F6D679-DF48-44A9-89B0-6B7B93A75AA9/tmp/parcel.kml : (null)
